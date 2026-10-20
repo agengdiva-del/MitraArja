@@ -323,26 +323,26 @@ export default function App() {
               }}
               className="flex items-center gap-2.5 text-left group cursor-pointer"
             >
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 via-teal-500 to-amber-400 p-0.5 shadow-sm flex-shrink-0">
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 via-sky-400 to-indigo-500 p-0.5 shadow-sm flex-shrink-0">
                 <div className="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center overflow-hidden">
-                  <DriverLogo size="sm" showBadge={false} className="scale-90" />
+                  <DriverLogo size="sm" showBadge={false} className="scale-95" />
                 </div>
               </div>
               <div className="flex flex-col text-left">
                 <div className="flex items-center gap-1 leading-none">
-                  <span className="text-[9px] font-black tracking-[0.2em] text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded uppercase">
-                    MITRA
+                  <span className="text-[9px] font-black tracking-[0.2em] text-blue-800 bg-blue-100 px-1.5 py-0.5 rounded uppercase">
+                    AWD • MITRA
                   </span>
                 </div>
-                <span className="text-sm sm:text-base font-black tracking-tight text-slate-900 group-hover:text-emerald-700 transition-colors uppercase leading-tight mt-0.5">
-                  ARJAWINANGUN <span className="text-emerald-600">DELIVERY</span>
+                <span className="text-sm sm:text-base font-black tracking-tight text-slate-900 group-hover:text-blue-700 transition-colors uppercase leading-tight mt-0.5">
+                  ARJAWINANGUN <span className="text-sky-600">DELIVERY</span>
                 </span>
               </div>
             </button>
 
             {/* Location indicator */}
             <div className="hidden lg:flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700">
-              <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+              <MapPin className="w-3.5 h-3.5 text-blue-600" />
               <span>Arjawinangun & Cirebon Timur</span>
             </div>
           </div>
@@ -354,7 +354,7 @@ export default function App() {
                 onClick={() => setActiveCustomerTab('home')}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   activeCustomerTab === 'home'
-                    ? 'bg-white text-emerald-800 shadow-xs'
+                    ? 'bg-white text-blue-800 shadow-xs'
                     : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
@@ -364,20 +364,20 @@ export default function App() {
                 onClick={() => setActiveCustomerTab('orders')}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-bold relative transition-all cursor-pointer ${
                   activeCustomerTab === 'orders'
-                    ? 'bg-white text-emerald-800 shadow-xs'
+                    ? 'bg-white text-blue-800 shadow-xs'
                     : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 <span>Pesanan</span>
                 {activeOrder && (
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 absolute top-1.5 right-1.5" />
+                  <span className="w-2 h-2 rounded-full bg-blue-600 absolute top-1.5 right-1.5" />
                 )}
               </button>
               <button
                 onClick={() => setActiveCustomerTab('chat')}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   activeCustomerTab === 'chat'
-                    ? 'bg-white text-emerald-800 shadow-xs'
+                    ? 'bg-white text-blue-800 shadow-xs'
                     : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
@@ -387,17 +387,17 @@ export default function App() {
                 onClick={() => setShowWalletModal(true)}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   activeCustomerTab === 'wallet'
-                    ? 'bg-white text-emerald-800 shadow-xs'
+                    ? 'bg-white text-blue-800 shadow-xs'
                     : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
-                MitraPay
+                AWD Pay
               </button>
               <button
                 onClick={() => setActiveCustomerTab('profile')}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   activeCustomerTab === 'profile'
-                    ? 'bg-white text-emerald-800 shadow-xs'
+                    ? 'bg-white text-blue-800 shadow-xs'
                     : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
@@ -406,19 +406,19 @@ export default function App() {
             </nav>
           )}
 
-          {/* Right Action Tools: MitraPay Badge, Role Selector & Admin Portal */}
+          {/* Right Action Tools: AWD Pay Badge, Role Selector & Admin Portal */}
           <div className="flex items-center gap-2">
             
-            {/* Quick MitraPay Wallet balance badge */}
+            {/* Quick AWD Pay Wallet balance badge */}
             <button
               onClick={() => setShowWalletModal(true)}
-              className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl text-xs font-bold text-emerald-900 transition-colors cursor-pointer"
+              className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl text-xs font-bold text-blue-900 transition-colors cursor-pointer"
             >
-              <div className="w-5 h-5 rounded-md bg-emerald-600 text-white flex items-center justify-center text-[10px] font-black">
-                M
+              <div className="w-5 h-5 rounded-md bg-blue-600 text-white flex items-center justify-center text-[10px] font-black">
+                A
               </div>
-              <span className="hidden sm:inline text-slate-600 font-semibold text-[11px]">MitraPay:</span>
-              <span className="text-emerald-800 font-black">Rp {currentUser.walletBalance.toLocaleString('id-ID')}</span>
+              <span className="hidden sm:inline text-slate-600 font-semibold text-[11px]">AWD Pay:</span>
+              <span className="text-blue-800 font-black">Rp {currentUser.walletBalance.toLocaleString('id-ID')}</span>
             </button>
 
             {/* Dedicated Admin Portal button (Top Header) */}
@@ -432,11 +432,11 @@ export default function App() {
               }}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-xs ${
                 currentRole === 'admin'
-                  ? 'bg-slate-950 text-emerald-400 border border-emerald-500/50'
+                  ? 'bg-slate-950 text-sky-400 border border-blue-500/50'
                   : 'bg-slate-900 hover:bg-slate-800 text-white border border-slate-800'
               }`}
             >
-              <Lock className="w-3.5 h-3.5 text-emerald-400" />
+              <Lock className="w-3.5 h-3.5 text-sky-400" />
               <span className="hidden sm:inline">
                 {currentRole === 'admin' ? 'Keluar Admin' : 'Khusus Admin'}
               </span>
@@ -587,7 +587,7 @@ export default function App() {
               <button
                 onClick={() => setActiveCustomerTab('home')}
                 className={`flex flex-col items-center gap-0.5 text-[10px] font-bold transition-colors cursor-pointer ${
-                  activeCustomerTab === 'home' ? 'text-emerald-700' : 'text-slate-400 hover:text-slate-700'
+                  activeCustomerTab === 'home' ? 'text-blue-700' : 'text-slate-400 hover:text-slate-700'
                 }`}
               >
                 <Home className="w-5 h-5" />
@@ -597,41 +597,41 @@ export default function App() {
               <button
                 onClick={() => setActiveCustomerTab('orders')}
                 className={`flex flex-col items-center gap-0.5 text-[10px] font-bold relative transition-colors cursor-pointer ${
-                  activeCustomerTab === 'orders' ? 'text-emerald-700' : 'text-slate-400 hover:text-slate-700'
+                  activeCustomerTab === 'orders' ? 'text-blue-700' : 'text-slate-400 hover:text-slate-700'
                 }`}
               >
                 <ShoppingBag className="w-5 h-5" />
                 <span>Pesanan</span>
                 {activeOrder && (
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 absolute top-0 right-2" />
+                  <span className="w-2 h-2 rounded-full bg-blue-600 absolute top-0 right-2" />
                 )}
               </button>
 
               <button
                 onClick={() => setActiveCustomerTab('chat')}
                 className={`flex flex-col items-center gap-0.5 text-[10px] font-bold relative transition-colors cursor-pointer ${
-                  activeCustomerTab === 'chat' ? 'text-emerald-700' : 'text-slate-400 hover:text-slate-700'
+                  activeCustomerTab === 'chat' ? 'text-blue-700' : 'text-slate-400 hover:text-slate-700'
                 }`}
               >
                 <MessageSquare className="w-5 h-5" />
                 <span>Chat</span>
-                <span className="w-2 h-2 rounded-full bg-blue-500 absolute top-0 right-2" />
+                <span className="w-2 h-2 rounded-full bg-sky-500 absolute top-0 right-2" />
               </button>
 
               <button
                 onClick={() => setShowWalletModal(true)}
                 className={`flex flex-col items-center gap-0.5 text-[10px] font-bold transition-colors cursor-pointer ${
-                  activeCustomerTab === 'wallet' ? 'text-emerald-700' : 'text-slate-400 hover:text-slate-700'
+                  activeCustomerTab === 'wallet' ? 'text-blue-700' : 'text-slate-400 hover:text-slate-700'
                 }`}
               >
                 <Wallet className="w-5 h-5" />
-                <span>MitraPay</span>
+                <span>AWD Pay</span>
               </button>
 
               <button
                 onClick={() => setActiveCustomerTab('profile')}
                 className={`flex flex-col items-center gap-0.5 text-[10px] font-bold transition-colors cursor-pointer ${
-                  activeCustomerTab === 'profile' ? 'text-emerald-700' : 'text-slate-400 hover:text-slate-700'
+                  activeCustomerTab === 'profile' ? 'text-blue-700' : 'text-slate-400 hover:text-slate-700'
                 }`}
               >
                 <User className="w-5 h-5" />

@@ -24,25 +24,25 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
   onOpenAuth
 }) => {
   return (
-    <div className="relative min-h-screen w-full flex flex-col justify-between bg-gradient-to-b from-slate-950 via-emerald-950 to-slate-950 text-white p-5 sm:p-8 overflow-hidden select-none">
+    <div className="relative min-h-screen w-full flex flex-col justify-between bg-gradient-to-b from-slate-950 via-blue-950 to-slate-950 text-white p-5 sm:p-8 overflow-hidden select-none">
       
       {/* Background Soft Glows */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 right-0 w-80 h-80 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 right-0 w-80 h-80 bg-sky-500/15 rounded-full blur-3xl pointer-events-none" />
 
       {/* Top Header Bar */}
       <header className="relative z-10 flex items-center justify-between w-full max-w-xl mx-auto">
-        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-xs font-semibold text-emerald-300 shadow-sm">
-          <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-xs font-semibold text-sky-300 shadow-sm">
+          <MapPin className="w-3.5 h-3.5 text-sky-400" />
           <span>Arjawinangun & Cirebon Barat</span>
         </div>
 
         {/* Dedicated Admin Portal Button at the Top Right */}
         <button
           onClick={() => onOpenAuth('admin')}
-          className="group flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-emerald-500/30 hover:border-emerald-400 text-xs font-bold text-emerald-300 transition-all shadow-md cursor-pointer"
+          className="group flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-blue-500/30 hover:border-sky-400 text-xs font-bold text-sky-300 transition-all shadow-md cursor-pointer"
         >
-          <Lock className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
+          <Lock className="w-3.5 h-3.5 text-sky-400 group-hover:scale-110 transition-transform" />
           <span>Portal Admin</span>
         </button>
       </header>
@@ -50,7 +50,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
       {/* Main Center Hero & Arjawinangun Delivery Driver Logo */}
       <main className="relative z-10 flex flex-col items-center text-center my-auto py-5 max-w-md mx-auto w-full">
         
-        {/* DRIVER LOGO EMBLEM (ARJAWINANGUN DELIVERY) */}
+        {/* DRIVER LOGO EMBLEM (AWD ARJAWINANGUN DELIVERY) */}
         <div className="mb-3 transform hover:scale-105 transition-transform duration-300">
           <DriverLogo size="lg" showBadge={false} />
         </div>
@@ -58,17 +58,17 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         {/* Branding Typography: Tulisan MITRA Dibuat Kecil, ARJAWINANGUN DELIVERY Dibuat Agak Besar */}
         <div className="flex flex-col items-center">
           {/* Tulisan MITRA kecil */}
-          <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-950/90 border border-emerald-500/40 text-[10px] sm:text-[11px] font-black uppercase tracking-[0.25em] text-emerald-300 shadow-xs mb-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-            MITRA
+          <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-blue-950/90 border border-blue-400/40 text-[10px] sm:text-[11px] font-black uppercase tracking-[0.25em] text-blue-300 shadow-xs mb-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" />
+            AWD • MITRA
           </div>
 
           {/* Tulisan ARJAWINANGUN DELIVERY Agak Besar */}
           <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-white uppercase leading-none drop-shadow-md">
-            ARJAWINANGUN <span className="text-emerald-400">DELIVERY</span>
+            ARJAWINANGUN <span className="text-sky-400">DELIVERY</span>
           </h1>
 
-          <p className="text-xs sm:text-sm font-semibold tracking-wide text-emerald-200/90 mt-1.5">
+          <p className="text-xs sm:text-sm font-semibold tracking-wide text-blue-200/90 mt-1.5">
             Layanan Antar Kurir & Hyperlocal Cepat
           </p>
         </div>
@@ -78,7 +78,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
           <p className="text-sm sm:text-base font-bold text-white">
             Pesan Apa Saja di Arjawinangun
           </p>
-          <p className="text-xs text-emerald-300/80 font-medium flex items-center justify-center gap-2">
+          <p className="text-xs text-sky-300/90 font-medium flex items-center justify-center gap-2">
             <span>Cepat</span>
             <span>•</span>
             <span>Aman</span>
@@ -90,15 +90,15 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         {/* Value Propositions */}
         <div className="grid grid-cols-3 gap-2 w-full mt-5 text-left">
           <div className="p-2.5 sm:p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-            <span className="text-xs font-bold text-emerald-400 block mb-0.5">10 Layanan</span>
+            <span className="text-xs font-bold text-sky-400 block mb-0.5">10 Layanan</span>
             <span className="text-[10px] sm:text-[11px] text-slate-300 leading-tight block">Kuliner, Pasar, Apotek & Paket</span>
           </div>
           <div className="p-2.5 sm:p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-            <span className="text-xs font-bold text-amber-400 block mb-0.5">Kirim 8 Ribu</span>
+            <span className="text-xs font-bold text-blue-300 block mb-0.5">Kirim 8 Ribu</span>
             <span className="text-[10px] sm:text-[11px] text-slate-300 leading-tight block">Tarif kurir flat 2 KM pertama</span>
           </div>
           <div className="p-2.5 sm:p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-            <span className="text-xs font-bold text-teal-400 block mb-0.5">MitraPay</span>
+            <span className="text-xs font-bold text-indigo-300 block mb-0.5">AWD Pay</span>
             <span className="text-[10px] sm:text-[11px] text-slate-300 leading-tight block">QRIS, Transfer, PPOB & Poin</span>
           </div>
         </div>
@@ -110,19 +110,19 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         {/* Primary Action: Direct Browse / Tamu */}
         <button
           onClick={onStart}
-          className="w-full py-3.5 px-6 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-sm sm:text-base rounded-2xl shadow-lg shadow-emerald-950/40 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
+          className="w-full py-3.5 px-6 bg-gradient-to-r from-blue-600 via-blue-500 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white font-black text-sm sm:text-base rounded-2xl shadow-lg shadow-blue-950/40 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
         >
           <span>Lanjut Sebagai Tamu & Jelajahi</span>
-          <ArrowRight className="w-5 h-5 text-slate-950" />
+          <ArrowRight className="w-5 h-5 text-white" />
         </button>
 
         {/* Login Options: WhatsApp, Google, Email */}
         <div className="grid grid-cols-3 gap-2">
           <button
             onClick={() => onOpenAuth('whatsapp')}
-            className="py-2.5 px-2 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-emerald-500/30 text-xs font-bold text-white flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer"
+            className="py-2.5 px-2 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-blue-500/30 text-xs font-bold text-white flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer"
           >
-            <Phone className="w-3.5 h-3.5 text-emerald-400" />
+            <Phone className="w-3.5 h-3.5 text-sky-400" />
             <span>WhatsApp</span>
           </button>
 
@@ -143,7 +143,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
             onClick={() => onOpenAuth('whatsapp')}
             className="py-2.5 px-2 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-white flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer"
           >
-            <Mail className="w-3.5 h-3.5 text-teal-400" />
+            <Mail className="w-3.5 h-3.5 text-sky-400" />
             <span>Email</span>
           </button>
         </div>
@@ -152,9 +152,9 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         <div className="flex items-center justify-between pt-1 px-1 text-xs">
           <button
             onClick={() => onOpenAuth('merchant')}
-            className="flex items-center gap-1 text-emerald-300 hover:text-emerald-200 transition-colors cursor-pointer"
+            className="flex items-center gap-1 text-sky-300 hover:text-sky-200 transition-colors cursor-pointer"
           >
-            <Store className="w-3.5 h-3.5 text-emerald-400" />
+            <Store className="w-3.5 h-3.5 text-sky-400" />
             <span>Daftar Merchant UMKM</span>
           </button>
 
@@ -162,9 +162,9 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
 
           <button
             onClick={() => onOpenAuth('courier')}
-            className="flex items-center gap-1 text-teal-300 hover:text-teal-200 transition-colors cursor-pointer"
+            className="flex items-center gap-1 text-blue-300 hover:text-blue-200 transition-colors cursor-pointer"
           >
-            <Bike className="w-3.5 h-3.5 text-teal-400" />
+            <Bike className="w-3.5 h-3.5 text-blue-400" />
             <span>Gabung Mitra Kurir</span>
           </button>
         </div>

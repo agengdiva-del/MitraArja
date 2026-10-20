@@ -106,13 +106,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   return (
     <div className="space-y-4 pb-20">
       
-      {/* Top Location Bar & MitraPay Summary */}
-      <div className="bg-gradient-to-r from-emerald-800 to-teal-800 text-white p-4 rounded-b-3xl shadow-md -mx-4 -mt-4 mb-4">
+      {/* Top Location Bar & AWD Pay Summary */}
+      <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-sky-800 text-white p-4 rounded-b-3xl shadow-md -mx-4 -mt-4 mb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-emerald-300" />
+            <MapPin className="w-4 h-4 text-sky-300" />
             <div>
-              <p className="text-[10px] text-emerald-200 uppercase font-bold tracking-wider">Antar ke Lokasi</p>
+              <p className="text-[10px] text-sky-200 uppercase font-bold tracking-wider">Antar ke Lokasi</p>
               <select 
                 value={currentDistrict}
                 onChange={(e) => setCurrentDistrict(e.target.value)}
@@ -127,16 +127,16 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </div>
           </div>
 
-          {/* MitraPay Quick Badge */}
+          {/* AWD Pay Quick Badge */}
           <button
             onClick={onOpenWallet}
             className="flex items-center gap-2 bg-white/15 hover:bg-white/25 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-white/20 transition-all cursor-pointer"
           >
-            <div className="w-5 h-5 rounded-lg bg-emerald-400 text-emerald-950 flex items-center justify-center font-black text-[10px]">
-              M
+            <div className="w-5 h-5 rounded-lg bg-sky-400 text-blue-950 flex items-center justify-center font-black text-[10px]">
+              A
             </div>
             <div className="text-left">
-              <p className="text-[9px] text-emerald-200">MitraPay</p>
+              <p className="text-[9px] text-sky-200">AWD Pay</p>
               <p className="text-xs font-extrabold text-white">Rp {currentUser.walletBalance.toLocaleString('id-ID')}</p>
             </div>
           </button>
@@ -150,7 +150,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Cari empal gentong, ayam geprek, sembako, apotek..."
-            className="w-full pl-9 pr-4 py-2.5 bg-white text-slate-800 rounded-2xl text-xs font-medium placeholder-slate-400 shadow-inner focus:outline-none focus:ring-2 focus:ring-emerald-400"
+            className="w-full pl-9 pr-4 py-2.5 bg-white text-slate-800 rounded-2xl text-xs font-medium placeholder-slate-400 shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
         </div>
       </div>
@@ -159,24 +159,24 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       {activeOrder && (
         <div 
           onClick={() => onOpenOrderTracking(activeOrder)}
-          className="p-3 bg-gradient-to-r from-emerald-700 to-teal-700 rounded-2xl text-white shadow-lg cursor-pointer flex items-center justify-between gap-2.5 animate-in fade-in"
+          className="p-3 bg-gradient-to-r from-blue-700 to-sky-700 rounded-2xl text-white shadow-lg cursor-pointer flex items-center justify-between gap-2.5 animate-in fade-in"
         >
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
-              <Bike className="w-5 h-5 text-emerald-100" />
+              <Bike className="w-5 h-5 text-sky-100" />
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-300 animate-ping" />
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-100">Order Sedang Berjalan</span>
+                <span className="w-2 h-2 rounded-full bg-sky-300 animate-ping" />
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-sky-100">Order Sedang Berjalan</span>
               </div>
-              <p className="text-xs font-bold truncate">{activeOrder.merchantName || 'Kurir MitraArja'}</p>
-              <p className="text-[10px] text-emerald-100 truncate">{activeOrder.courierName || 'Kang Asep'} • {activeOrder.estimatedMinutes} Menit lagi</p>
+              <p className="text-xs font-bold truncate">{activeOrder.merchantName || 'Kurir AWD'}</p>
+              <p className="text-[10px] text-sky-100 truncate">{activeOrder.courierName || 'Kang Asep'} • {activeOrder.estimatedMinutes} Menit lagi</p>
             </div>
           </div>
           <button 
             type="button"
-            className="px-2.5 py-1.5 bg-white text-emerald-800 font-bold text-xs rounded-xl shadow-xs shrink-0 whitespace-nowrap"
+            className="px-2.5 py-1.5 bg-white text-blue-850 font-bold text-xs rounded-xl shadow-xs shrink-0 whitespace-nowrap"
           >
             Lacak
           </button>
@@ -198,7 +198,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               className="w-full h-full object-cover opacity-80"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent p-4 flex flex-col justify-end text-white">
-              <span className="px-2 py-0.5 rounded bg-emerald-500 text-[10px] font-extrabold text-white self-start uppercase tracking-wider mb-1">
+              <span className="px-2 py-0.5 rounded bg-blue-600 text-[10px] font-extrabold text-white self-start uppercase tracking-wider mb-1">
                 {banner.badge}
               </span>
               <h3 className="text-sm font-black text-white">{banner.title}</h3>
@@ -213,7 +213,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               key={i}
               onClick={() => setActiveBannerIdx(i)}
               className={`w-2 h-2 rounded-full transition-all ${
-                i === activeBannerIdx ? 'w-5 bg-emerald-400' : 'bg-white/50'
+                i === activeBannerIdx ? 'w-5 bg-sky-400' : 'bg-white/50'
               }`}
               aria-label={`Banner ${i + 1}`}
             />
@@ -224,8 +224,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       {/* 10 MAIN MENUS GRID */}
       <div>
         <div className="flex items-center justify-between mb-2.5">
-          <h3 className="font-extrabold text-slate-900 text-sm">Layanan MitraArja</h3>
-          <span className="text-[11px] font-bold text-emerald-700">Super App Lokal</span>
+          <h3 className="font-extrabold text-slate-900 text-sm">Layanan AWD Delivery</h3>
+          <span className="text-[11px] font-bold text-blue-700">Super App Lokal</span>
         </div>
 
         <div className="grid grid-cols-5 gap-2.5">
@@ -256,10 +256,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       <div className="space-y-2 pt-1">
         <div className="flex items-center justify-between text-xs font-semibold text-slate-700">
           <div className="flex items-center gap-1.5">
-            <SlidersHorizontal className="w-3.5 h-3.5 text-emerald-600" />
+            <SlidersHorizontal className="w-3.5 h-3.5 text-blue-600" />
             <span>Radius Jangkauan: <strong>{selectedRadius} KM</strong></span>
           </div>
-          <span className="text-[11px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold">
+          <span className="text-[11px] text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full font-bold">
             Toko Buka Saja ({filteredMerchants.length})
           </span>
         </div>
@@ -269,7 +269,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           max="15"
           value={selectedRadius}
           onChange={(e) => setSelectedRadius(parseInt(e.target.value))}
-          className="w-full accent-emerald-600"
+          className="w-full accent-blue-600"
         />
 
         {/* Horizontal Category Chips */}
@@ -280,7 +280,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               onClick={() => setSelectedCategory(cat)}
               className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors ${
                 selectedCategory === cat
-                  ? 'bg-emerald-600 text-white shadow-xs'
+                  ? 'bg-blue-600 text-white shadow-xs'
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               }`}
             >
@@ -307,7 +307,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <div 
                 key={prod.id}
                 onClick={() => merchant && onSelectMerchant(merchant)}
-                className="w-36 shrink-0 bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs hover:border-emerald-300 transition-all cursor-pointer group flex flex-col justify-between"
+                className="w-36 shrink-0 bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs hover:border-blue-300 transition-all cursor-pointer group flex flex-col justify-between"
               >
                 <div className="relative h-24 w-full bg-slate-100">
                   <img src={prod.image} alt={prod.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
@@ -320,7 +320,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 <div className="p-2 space-y-1">
                   <h4 className="font-bold text-slate-800 text-xs line-clamp-1">{prod.name}</h4>
                   <p className="text-[10px] text-slate-400 truncate">{merchant?.name}</p>
-                  <p className="text-xs font-extrabold text-emerald-700">Rp {prod.price.toLocaleString('id-ID')}</p>
+                  <p className="text-xs font-extrabold text-blue-700">Rp {prod.price.toLocaleString('id-ID')}</p>
                 </div>
               </div>
             );
@@ -335,7 +335,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <h3 className="font-extrabold text-slate-900 text-sm">Merchant Terdekat</h3>
             <p className="text-[11px] text-slate-500">UMKM & Resto siap diantar kurir independen</p>
           </div>
-          <span className="text-xs text-emerald-700 font-bold">
+          <span className="text-xs text-blue-700 font-bold">
             Radius 1-{selectedRadius} KM
           </span>
         </div>
@@ -351,7 +351,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <div
                 key={merchant.id}
                 onClick={() => onSelectMerchant(merchant)}
-                className="p-3 bg-white border border-slate-200 rounded-2xl hover:border-emerald-300 transition-all shadow-xs flex gap-3 cursor-pointer group"
+                className="p-3 bg-white border border-slate-200 rounded-2xl hover:border-blue-300 transition-all shadow-xs flex gap-3 cursor-pointer group"
               >
                 <div className="relative w-24 h-24 rounded-xl overflow-hidden bg-slate-100 shrink-0">
                   <img 
@@ -386,7 +386,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                         {merchant.rating} ({merchant.totalOrders}+)
                       </span>
                       <span>•</span>
-                      <span className="font-semibold text-emerald-700">
+                      <span className="font-semibold text-blue-700">
                         {merchant.distanceKm} KM
                       </span>
                       <span>•</span>
