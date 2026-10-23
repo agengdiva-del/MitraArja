@@ -168,9 +168,17 @@ export const OrderTrackingModal: React.FC<OrderTrackingModalProps> = ({
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-600">{order.courierVehicle || 'Honda Vario 160 (E 4521 AA)'}</p>
-                <div className="flex items-center gap-1 text-[10px] text-emerald-700 font-semibold">
-                  <Star className="w-3 h-3 text-amber-500 fill-amber-400 inline" />
-                  <span>4.9 (1.200+ Pesanan Sukses)</span>
+                <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
+                  <div className="flex items-center gap-1 text-[10px] text-emerald-700 font-semibold">
+                    <Star className="w-3 h-3 text-amber-500 fill-amber-400 inline" />
+                    <span>4.9 (1.200+ Pesanan)</span>
+                  </div>
+                  <span>•</span>
+                  {/* Numeric Driver Credibility */}
+                  <span className="bg-emerald-100 text-emerald-800 font-mono text-[10px] font-bold px-1.5 py-0.2 rounded border border-emerald-300 flex items-center gap-0.5">
+                    <ShieldCheck className="w-3 h-3 text-emerald-700" />
+                    Kredibilitas: +395 / -0
+                  </span>
                 </div>
               </div>
             </div>
@@ -242,8 +250,25 @@ export const OrderTrackingModal: React.FC<OrderTrackingModalProps> = ({
 
           {/* Items & Cost breakdown */}
           <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
-            <h4 className="font-bold text-slate-800">Rincian Pembayaran ({order.paymentMethod.toUpperCase()})</h4>
-            <div className="flex justify-between text-slate-600">
+            <div className="flex items-center justify-between">
+              <h4 className="font-bold text-slate-800">Metode Pembayaran Langsung</h4>
+              <span className="font-black text-xs text-blue-800 bg-blue-100 px-2 py-0.5 rounded-full uppercase">
+                {order.paymentMethod === 'cod' ? '💵 Bayar Tunai (COD)' : (order.paymentMethod === 'qris' ? '📲 QRIS Langsung' : '🏦 Transfer Bank')}
+              </span>
+            </div>
+
+            {/* Direct payment note */}
+            <div className="p-2.5 bg-blue-50/80 rounded-xl border border-blue-200 text-[11px] text-blue-900 leading-relaxed">
+              {order.paymentMethod === 'cod' ? (
+                <span>⚠️ <strong>Awas Fake Order:</strong> Harap siapkan uang tunai pas <strong>Rp {order.total.toLocaleString('id-ID')}</strong> untuk diserahkan langsung ke Driver saat pesanan tiba.</span>
+              ) : order.paymentMethod === 'qris' ? (
+                <span>📲 <strong>QRIS Langsung:</strong> Scan kode QRIS toko/driver saat pesanan sampai tanpa perantara saldo aplikasi.</span>
+              ) : (
+                <span>🏦 <strong>Transfer Bank:</strong> Pembayaran langsung ke rekening resmi toko/driver.</span>
+              )}
+            </div>
+
+            <div className="flex justify-between text-slate-600 pt-1">
               <span>Subtotal Item</span>
               <span className="font-semibold text-slate-800">Rp {order.subtotal.toLocaleString('id-ID')}</span>
             </div>
@@ -262,9 +287,15 @@ export const OrderTrackingModal: React.FC<OrderTrackingModalProps> = ({
               </div>
             )}
             <div className="border-t border-slate-200 pt-1.5 flex justify-between font-black text-slate-900 text-sm">
-              <span>Total Pesanan</span>
+              <span>Total Tagihan Langsung</span>
               <span className="text-emerald-700">Rp {order.total.toLocaleString('id-ID')}</span>
             </div>
+          </div>
+
+          {/* Anti Fake Order Seal */}
+          <div className="p-2.5 bg-slate-100 border border-slate-200 rounded-xl flex items-center gap-2 text-[10px] text-slate-600">
+            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span>Pesanan dilindungi verifikasi GPS & Poin Kredibilitas AWD Arjawinangun. Hindari transaksi di luar aplikasi.</span>
           </div>
 
         </div>

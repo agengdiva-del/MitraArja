@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AdminStats, FraudAlert, Merchant, CourierProfile, Order, BannerAd } from '../../types';
+import { AdminStats, FraudAlert, Merchant, CourierProfile, Order, BannerAd, DonationCampaign } from '../../types';
 import { 
   ShieldAlert, 
   TrendingUp, 
@@ -17,7 +17,13 @@ import {
   Calendar,
   Layers,
   ArrowUpRight,
-  ShieldCheck
+  ShieldCheck,
+  Heart,
+  AlertTriangle,
+  FileCheck2,
+  XCircle,
+  ThumbsUp,
+  ThumbsDown
 } from 'lucide-react';
 
 interface AdminDashboardProps {
@@ -27,8 +33,11 @@ interface AdminDashboardProps {
   couriers: CourierProfile[];
   orders: Order[];
   banners: BannerAd[];
+  donations?: DonationCampaign[];
   onReviewFraud: (id: string, action: 'reviewed' | 'banned') => void;
   onUpdateCommissionRate: (ratePercent: number) => void;
+  onApproveDonation?: (campaignId: string, adminNote?: string) => void;
+  onRejectDonation?: (campaignId: string) => void;
   onExitAdmin?: () => void;
 }
 
@@ -39,14 +48,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   couriers,
   orders,
   banners,
+  donations = [],
   onReviewFraud,
   onUpdateCommissionRate,
+  onApproveDonation,
+  onRejectDonation,
   onExitAdmin
 }) => {
-  const [activeTab, setActiveTab] = useState<'overview' | 'monetization' | 'fraud' | 'zones' | 'database'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'donations' | 'fraud' | 'monetization' | 'zones' | 'database'>('overview');
   const [period, setPeriod] = useState<'daily' | 'weekly' | 'monthly' | 'yearly'>('monthly');
   const [commissionRate, setCommissionRate] = useState<number>(10);
   const [baseServiceFee, setBaseServiceFee] = useState<number>(1500);
+  const [approvalNoteInput, setApprovalNoteInput] = useState<{ [id: string]: string }>({});
 
   // Period multiplier for chart simulation
   const multiplier = period === 'daily' ? 0.03 : (period === 'weekly' ? 0.22 : (period === 'monthly' ? 1.0 : 12.0));
@@ -55,14 +68,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const currentProfit = Math.round(stats.netProfit * multiplier);
   const currentOrders = Math.round(stats.totalOrders * multiplier);
 
-  // Monetization breakdown
+  // Direct monetization breakdown without stored wallet balance
   const revenueBreakdown = [
-    { title: 'Komisi Merchant (10%)', amount: Math.round(currentRev * 0.58), percent: 58, desc: 'Dari total subtotal transaksi restoran & UMKM' },
-    { title: 'Service Fee (Rp 1.000 - 2.500)', amount: Math.round(currentRev * 0.18), percent: 18, desc: 'Biaya aplikasi per transaksi customer' },
-    { title: 'Iklan & Banner Homepage', amount: Math.round(currentRev * 0.10), percent: 10, desc: 'Rp 50.000/minggu & Rp 150.000/bulan' },
-    { title: 'Membership Pro (Merchant & Kurir)', amount: Math.round(currentRev * 0.08), percent: 8, desc: 'Merchant Rp 100k/bln, Kurir Rp 20k/bln' },
-    { title: 'Margin API Tagihan & Pulsa PPOB', amount: Math.round(currentRev * 0.04), percent: 4, desc: 'Selisih harga beli provider vs tarif jual' },
-    { title: 'Biaya Penarikan Saldo (Rp 2.500)', amount: Math.round(currentRev * 0.02), percent: 2, desc: 'Cashout fee dompet mitra' },
+    { title: 'Komisi Merchant (10%)', amount: Math.round(currentRev * 0.62), percent: 62, desc: 'Dari total transaksi restoran & UMKM Arjawinangun' },
+    { title: 'Biaya Layanan Aplikasi (Rp 1.500)', amount: Math.round(currentRev * 0.20), percent: 20, desc: 'Biaya teknologi operasional per pesanan' },
+    { title: 'Iklan & Banner Homepage Toko', amount: Math.round(currentRev * 0.12), percent: 12, desc: 'Slot sponsor UMKM & Kuliner Arjawinangun' },
+    { title: 'Membership Prioritas Driver & Mitra', amount: Math.round(currentRev * 0.06), percent: 6, desc: 'Fitur dispatch prioritas 10 detik lebih awal' },
   ];
 
   return (
@@ -135,22 +146,29 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-slate-200 bg-white rounded-2xl p-1 shadow-xs overflow-x-auto scrollbar-none">
+      <div className="flex border-b border-slate-200 bg-white rounded-2xl p-1 shadow-xs overflow-x-auto scrollbar-none gap-1">
         {[
           { id: 'overview', label: 'Ringkasan Eksekutif' },
+          { 
+            id: 'donations', 
+            label: `Persetujuan Donasi (${donations.filter(d => d.status === 'pending_approval').length})`,
+            highlight: donations.filter(d => d.status === 'pending_approval').length > 0
+          },
+          { id: 'fraud', label: `Anti Fake Order & Kredibilitas (${fraudAlerts.filter(f => f.status === 'flagged').length})` },
           { id: 'monetization', label: 'Monetisasi & Tarif' },
-          { id: 'fraud', label: `Deteksi Fraud (${fraudAlerts.filter(f => f.status === 'flagged').length})` },
           { id: 'zones', label: 'Zona & Wilayah' },
           { id: 'database', label: 'Skema Database Utama' }
         ].map(t => (
           <button
             key={t.id}
             onClick={() => setActiveTab(t.id as any)}
-            className={`py-2 px-3 text-xs font-bold rounded-xl whitespace-nowrap transition-all ${
-              activeTab === t.id ? 'bg-slate-900 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
+            className={`py-2 px-3 text-xs font-bold rounded-xl whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer ${
+              activeTab === t.id 
+                ? 'bg-slate-900 text-white shadow-xs' 
+                : (t.highlight ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'text-slate-600 hover:text-slate-900')
             }`}
           >
-            {t.label}
+            <span>{t.label}</span>
           </button>
         ))}
       </div>
@@ -218,6 +236,149 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         </div>
       )}
 
+      {/* DONATIONS APPROVAL TAB (ADMIN-ONLY STRICT REQUIREMENT) */}
+      {activeTab === 'donations' && (
+        <div className="space-y-4">
+          <div className="p-4 bg-gradient-to-r from-indigo-900 to-purple-900 text-white rounded-3xl space-y-2 shadow-md">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl bg-purple-500/20 border border-purple-400/40 flex items-center justify-center">
+                <Heart className="w-4 h-4 text-purple-300" />
+              </div>
+              <div>
+                <h3 className="font-extrabold text-sm">Persetujuan Program Donasi Warga (AWD Peduli)</h3>
+                <p className="text-[11px] text-purple-200">
+                  Peraturan Ketat: Hanya Super Admin yang berwenang memverifikasi dan menyetujui kampanye donasi publik
+                </p>
+              </div>
+            </div>
+            <p className="text-xs text-purple-100 leading-relaxed bg-black/20 p-2.5 rounded-xl border border-white/10">
+              Setiap penggalangan dana dari komunitas atau warga wajib diautentikasi nomor telepon penanggung jawab, tujuan pemanfaatan, dan target dana agar amanah bagi warga Arjawinangun.
+            </p>
+          </div>
+
+          {/* Pending Approval Section */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h4 className="font-extrabold text-sm text-slate-900 flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" />
+                <span>Menunggu Persetujuan Admin ({donations.filter(d => d.status === 'pending_approval').length})</span>
+              </h4>
+              <span className="text-[11px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full font-bold border border-amber-200">
+                Wajib Verifikasi
+              </span>
+            </div>
+
+            {donations.filter(d => d.status === 'pending_approval').length === 0 ? (
+              <div className="p-6 bg-white border border-slate-200 rounded-3xl text-center space-y-2">
+                <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto" />
+                <p className="font-bold text-slate-800 text-sm">Semua Pengajuan Telah Ditinjau</p>
+                <p className="text-xs text-slate-500">Tidak ada proposal program donasi baru yang menunggu persetujuan saat ini.</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {donations.filter(d => d.status === 'pending_approval').map(item => (
+                  <div key={item.id} className="p-4 bg-white border-2 border-amber-300 rounded-3xl shadow-sm space-y-3 text-xs">
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <img 
+                        src={item.image} 
+                        alt={item.title} 
+                        className="w-full sm:w-36 h-28 object-cover rounded-2xl border border-slate-200 shrink-0" 
+                      />
+                      <div className="flex-1 space-y-1.5">
+                        <div className="flex items-center gap-2">
+                          <span className="px-2 py-0.5 bg-amber-100 text-amber-900 rounded-md font-bold text-[10px] uppercase">
+                            Kategori: {item.category}
+                          </span>
+                          <span className="px-2 py-0.5 bg-rose-100 text-rose-800 rounded-md font-extrabold text-[10px] uppercase">
+                            Status: Butuh Persetujuan Admin
+                          </span>
+                        </div>
+                        <h4 className="font-extrabold text-slate-900 text-sm">{item.title}</h4>
+                        <p className="text-slate-600 line-clamp-2">{item.description}</p>
+                        <div className="grid grid-cols-2 gap-2 pt-1 text-[11px]">
+                          <div className="bg-slate-50 p-2 rounded-xl">
+                            <span className="text-slate-400 block text-[9px] uppercase font-bold">Penanggung Jawab</span>
+                            <span className="font-bold text-slate-800">{item.organizerName}</span>
+                            <span className="block text-slate-500 font-mono text-[10px]">{item.organizerPhone}</span>
+                          </div>
+                          <div className="bg-slate-50 p-2 rounded-xl">
+                            <span className="text-slate-400 block text-[9px] uppercase font-bold">Target Penggalangan</span>
+                            <span className="font-extrabold text-indigo-700 text-sm">Rp {item.targetAmount.toLocaleString('id-ID')}</span>
+                            <span className="block text-slate-400 text-[10px]">Diajukan: {item.createdAt}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Admin Verification Input */}
+                    <div className="pt-2 border-t border-slate-100 space-y-2">
+                      <label className="font-bold text-slate-700 block text-[11px]">
+                        Catatan Verifikasi Admin (Akan Ditampilkan ke Publik):
+                      </label>
+                      <input 
+                        type="text"
+                        placeholder="Contoh: Terverifikasi langsung ke penanggung jawab & proposal valid."
+                        value={approvalNoteInput[item.id] || ''}
+                        onChange={(e) => setApprovalNoteInput(prev => ({ ...prev, [item.id]: e.target.value }))}
+                        className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      />
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => onRejectDonation && onRejectDonation(item.id)}
+                        className="w-1/3 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                      >
+                        <XCircle className="w-4 h-4" />
+                        <span>Tolak Program</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => onApproveDonation && onApproveDonation(item.id, approvalNoteInput[item.id] || 'Terverifikasi resmi oleh Super Admin AWD Arjawinangun')}
+                        className="flex-1 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all cursor-pointer"
+                      >
+                        <FileCheck2 className="w-4 h-4" />
+                        <span>Setujui & Publikasikan Program Donasi</span>
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Approved Campaigns List */}
+          <div className="space-y-3 pt-2">
+            <h4 className="font-extrabold text-sm text-slate-900 flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              <span>Program Donasi yang Sudah Disetujui ({donations.filter(d => d.status === 'approved').length})</span>
+            </h4>
+
+            <div className="space-y-2">
+              {donations.filter(d => d.status === 'approved').map(item => (
+                <div key={item.id} className="p-3 bg-white border border-slate-200 rounded-2xl flex items-center justify-between gap-3 text-xs">
+                  <div className="flex items-center gap-3">
+                    <img src={item.image} alt={item.title} className="w-12 h-12 rounded-xl object-cover border border-slate-200 shrink-0" />
+                    <div>
+                      <h5 className="font-bold text-slate-900">{item.title}</h5>
+                      <p className="text-[11px] text-slate-500">Terkumpul: <strong>Rp {item.collectedAmount.toLocaleString('id-ID')}</strong> dari Rp {item.targetAmount.toLocaleString('id-ID')} ({item.donorCount} Donatur)</p>
+                      {item.adminApprovalNote && (
+                        <p className="text-[10px] text-emerald-700 font-medium">✓ {item.adminApprovalNote}</p>
+                      )}
+                    </div>
+                  </div>
+                  <span className="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-full font-bold text-[10px] shrink-0">
+                    Aktif Tayang
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* MONETIZATION TAB */}
       {activeTab === 'monetization' && (
         <div className="space-y-4">
@@ -281,22 +442,27 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         </div>
       )}
 
-      {/* FRAUD DETECTION TAB */}
+      {/* ANTI FAKE ORDER & CREDIBILITY SCORES TAB */}
       {activeTab === 'fraud' && (
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <h4 className="font-extrabold text-sm text-slate-900 flex items-center gap-1.5">
-                <ShieldAlert className="w-4 h-4 text-rose-500" />
-                Pusat Deteksi Kecurangan (Fraud Prevention)
-              </h4>
-              <p className="text-xs text-slate-500">
-                Deteksi otomatis: Order Fiktif, Akun Ganda (Multi-Account), dan Manipulasi Kode Voucher
-              </p>
+        <div className="space-y-4 text-xs">
+          {/* Prominent Warning Banner */}
+          <div className="p-4 bg-rose-50 border-2 border-rose-300 rounded-3xl space-y-2 shadow-xs">
+            <div className="flex items-center gap-2 text-rose-900 font-extrabold text-sm">
+              <ShieldAlert className="w-5 h-5 text-rose-600 shrink-0" />
+              <span>SISTEM PERLINDUNGAN & PERINGATAN AWAS FAKE ORDER</span>
             </div>
+            <p className="text-rose-800 leading-relaxed text-[11px]">
+              Sistem memantau setiap pesanan berisiko tinggi (COD nilai besar, pemesan baru tanpa riwayat, titik GPS mencurigakan). Akun yang terindikasi melakukan <strong>Fake Order (Pesanan Fiktif)</strong> akan otomatis dipenalti nilai minus (-) dan diblokir permanen.
+            </p>
           </div>
 
+          {/* Active Alerts */}
           <div className="space-y-2.5">
+            <h4 className="font-extrabold text-sm text-slate-900 flex items-center justify-between">
+              <span>Laporan & Deteksi Kecurangan Terkini</span>
+              <span className="text-[10px] text-slate-500 font-normal">Auto-flagged by system</span>
+            </h4>
+
             {fraudAlerts.map((alert) => (
               <div 
                 key={alert.id}
@@ -326,17 +492,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <>
                         <button
                           onClick={() => onReviewFraud(alert.id, 'reviewed')}
-                          className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg text-[11px] flex items-center gap-1"
+                          className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg text-[11px] flex items-center gap-1 cursor-pointer"
                         >
                           <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                          Tandai Aman
+                          Tandai Aman (+2 Poin)
                         </button>
                         <button
                           onClick={() => onReviewFraud(alert.id, 'banned')}
-                          className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-lg text-[11px] flex items-center gap-1"
+                          className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-lg text-[11px] flex items-center gap-1 cursor-pointer"
                         >
                           <Ban className="w-3 h-3" />
-                          Blokir Akun
+                          Penalti Fake Order (-10 Poin & Blokir)
                         </button>
                       </>
                     )}
@@ -344,6 +510,77 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* CREDIBILITY SCORES MANAGEMENT TABLE */}
+          <div className="p-4 bg-white border border-slate-200 rounded-3xl space-y-3 shadow-xs">
+            <div className="flex justify-between items-center">
+              <div>
+                <h4 className="font-extrabold text-sm text-slate-900 flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                  Daftar Poin Kredibilitas Transparansi (Customer, Driver & Merchant)
+                </h4>
+                <p className="text-[11px] text-slate-500">
+                  Nilai angka Plus (+) dan Minus (-) terlihat oleh sesama pengguna agar transaksi saling percaya
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              {[
+                { type: 'Customer', name: 'Kang Dimas (0812-3456-7890)', role: 'Pelanggan Jungjang', plus: 148, minus: 0, status: 'Sangat Terpercaya (Verified)' },
+                { type: 'Driver', name: 'Kang Asep Supriatna (E 4521 AA)', role: 'Mitra Kurir Motor', plus: 395, minus: 0, status: 'Driver Teladan (Gold)' },
+                { type: 'Merchant', name: 'Empal Gentong Hj. Darma', role: 'Restoran Kuliner', plus: 342, minus: 1, status: 'Mitra Resmi Terverifikasi' },
+                { type: 'Merchant', name: 'Toko Sembako Berkah Pasar Arjawinangun', role: 'Sembako Pasar', plus: 670, minus: 0, status: 'Super Seller Pasar' },
+                { type: 'Customer', name: 'Akun Mencurigakan (0899-2311-0000)', role: 'Customer Baru', plus: 1, minus: 8, status: 'Peringatan Fake Order (-8)' }
+              ].map((acc, idx) => (
+                <div key={idx} className="p-3 bg-slate-50 border border-slate-200 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="space-y-0.5">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2 py-0.2 bg-blue-100 text-blue-800 rounded font-bold text-[9px] uppercase">
+                        {acc.type}
+                      </span>
+                      <span className="font-bold text-slate-900">{acc.name}</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500">{acc.role} • <span className={acc.minus > 2 ? 'text-rose-600 font-bold' : 'text-emerald-700 font-medium'}>{acc.status}</span></p>
+                  </div>
+
+                  {/* Explicit Plus & Minus Points */}
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1.5 font-mono text-xs bg-white px-2.5 py-1 rounded-xl border border-slate-200 shadow-2xs">
+                      <span className="text-emerald-600 font-extrabold flex items-center gap-0.5">
+                        <ThumbsUp className="w-3 h-3 inline" />
+                        +{acc.plus}
+                      </span>
+                      <span className="text-slate-300">/</span>
+                      <span className="text-rose-600 font-extrabold flex items-center gap-0.5">
+                        <ThumbsDown className="w-3 h-3 inline" />
+                        -{acc.minus}
+                      </span>
+                    </div>
+
+                    <div className="flex gap-1">
+                      <button 
+                        type="button"
+                        onClick={() => alert(`Poin Kredibilitas ${acc.name} berhasil ditambah +1`)}
+                        className="px-2 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-lg text-[10px] font-bold cursor-pointer"
+                        title="Tambah 1 Poin Sukses"
+                      >
+                        +1
+                      </button>
+                      <button 
+                        type="button"
+                        onClick={() => alert(`Penalti Fake Order diberikan kepada ${acc.name} (-5 Poin)`)}
+                        className="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 rounded-lg text-[10px] font-bold cursor-pointer"
+                        title="Penalti Fake Order -5"
+                      >
+                        -5
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}

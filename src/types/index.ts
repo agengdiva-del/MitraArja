@@ -1,5 +1,11 @@
 export type UserRole = 'customer' | 'merchant' | 'courier' | 'admin';
 
+export interface CredibilityScore {
+  plus: number;
+  minus: number;
+  totalScore: number;
+}
+
 export interface UserProfile {
   id: string;
   name: string;
@@ -9,25 +15,35 @@ export interface UserProfile {
   role: UserRole;
   status: 'active' | 'suspended' | 'pending';
   points: number;
-  walletBalance: number;
   referralCode: string;
   referredBy?: string;
   address: string;
   district: string;
   createdAt: string;
+  ktpNumber?: string;
+  ktpPhoto?: string;
+  profilePhoto?: string;
+  pinPointLocation?: {
+    lat: number;
+    lng: number;
+    addressNote?: string;
+  };
+  simPhoto?: string;
+  vehicleType?: string;
+  vehiclePlate?: string;
+  credibilityScore: CredibilityScore;
 }
 
 export type ServiceType = 
-  | 'food' 
-  | 'grocery' 
-  | 'pharmacy' 
-  | 'delivery' 
-  | 'bills' 
-  | 'pulsa' 
-  | 'ppob' 
-  | 'event' 
-  | 'jastip' 
-  | 'umkm';
+  | 'ride'       // Antar Jemput
+  | 'food'       // Kuliner
+  | 'delivery'   // Paket Cepat
+  | 'grocery'    // Sembako
+  | 'pharmacy'   // Apotek
+  | 'donation'   // Donasi (AWD Peduli - butuh approval admin)
+  | 'emergency'  // Tolong (Bantuan Segera SOS)
+  | 'jastip'     // Jasa Titip
+  | 'umkm';      // UMKM Lokal
 
 export interface Merchant {
   id: string;
@@ -48,6 +64,7 @@ export interface Merchant {
   minOrder: number;
   phone: string;
   activePromo?: string;
+  credibilityScore: CredibilityScore;
 }
 
 export interface Product {
@@ -62,6 +79,10 @@ export interface Product {
   inStock: boolean;
   isHardMedicine?: boolean; // Requires prescription
   promoBadge?: string;
+  storeName?: string;
+  storeType?: 'warung_makan' | 'jajanan' | 'warung_sembako' | 'minuman' | 'apotek' | 'umkm';
+  salesCount?: number;
+  rating?: number;
 }
 
 export interface CartItem {
@@ -80,7 +101,8 @@ export type OrderStatus =
   | 'completed'
   | 'cancelled';
 
-export type PaymentMethod = 'cod' | 'qris' | 'bank_transfer' | 'mitrapay';
+// Pure direct payments: COD, QRIS langsung, Transfer Manual (No stored app balance)
+export type PaymentMethod = 'cod' | 'qris' | 'bank_transfer';
 
 export interface Order {
   id: string;
@@ -120,6 +142,10 @@ export interface Order {
   createdAt: string;
   estimatedMinutes: number;
   progressPercent: number;
+  customerCredibility?: CredibilityScore;
+  courierCredibility?: CredibilityScore;
+  merchantCredibility?: CredibilityScore;
+  isAntiFakeOrderConfirmed?: boolean;
 }
 
 export interface ChatMessage {
@@ -147,20 +173,9 @@ export interface CourierProfile {
   isPremiumMember: boolean;
   earningsToday: number;
   completedOrdersToday: number;
-  walletBalance: number;
+  credibilityScore: CredibilityScore;
   currentDispatchOrder?: Order | null;
   dispatchTimeLeft?: number;
-}
-
-export interface WalletTransaction {
-  id: string;
-  type: 'topup' | 'payment' | 'earning' | 'withdrawal' | 'cashback' | 'transfer';
-  title: string;
-  amount: number;
-  fee?: number;
-  status: 'success' | 'pending' | 'failed';
-  date: string;
-  reference?: string;
 }
 
 export interface BannerAd {
@@ -196,4 +211,42 @@ export interface AdminStats {
   totalCouriers: number;
   totalOrders: number;
   activeOrdersCount: number;
+  pendingDonationsCount?: number;
+  activeEmergenciesCount?: number;
+}
+
+// Donasi Warga (AWD Peduli) - Persetujuan mutlak admin
+export interface DonationCampaign {
+  id: string;
+  title: string;
+  category: 'kemanusiaan' | 'kesehatan' | 'yatim' | 'bencana' | 'sosial';
+  targetAmount: number;
+  collectedAmount: number;
+  donorCount: number;
+  organizerName: string;
+  organizerPhone: string;
+  description: string;
+  image: string;
+  status: 'pending_approval' | 'approved' | 'rejected' | 'completed';
+  adminApprovalNote?: string;
+  createdAt: string;
+  approvedAt?: string;
+}
+
+// Tolong (Bantuan Segera SOS)
+export interface EmergencyRequest {
+  id: string;
+  userId: string;
+  userName: string;
+  userPhone: string;
+  category: 'ban_bocor' | 'mogok' | 'medis_darurat' | 'kunci' | 'bensin_habis' | 'lainnya';
+  title: string;
+  description: string;
+  location: string;
+  lat: number;
+  lng: number;
+  status: 'searching' | 'responded' | 'resolved' | 'cancelled';
+  responderName?: string;
+  responderPhone?: string;
+  createdAt: string;
 }

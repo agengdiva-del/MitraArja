@@ -6,7 +6,9 @@ import {
   BannerAd,
   FraudAlert,
   AdminStats,
-  Order
+  Order,
+  DonationCampaign,
+  EmergencyRequest
 } from '../types';
 
 export const INITIAL_USERS: UserProfile[] = [
@@ -19,11 +21,11 @@ export const INITIAL_USERS: UserProfile[] = [
     role: 'customer',
     status: 'active',
     points: 450,
-    walletBalance: 185000,
     referralCode: 'ARJA-WIN-99',
     address: 'Griya Permata Arjawinangun Blok B4 No. 12',
     district: 'Jungjang, Arjawinangun',
-    createdAt: '2026-01-10'
+    createdAt: '2026-01-10',
+    credibilityScore: { plus: 148, minus: 0, totalScore: 148 }
   },
   {
     id: 'user_merchant_1',
@@ -34,11 +36,11 @@ export const INITIAL_USERS: UserProfile[] = [
     role: 'merchant',
     status: 'active',
     points: 820,
-    walletBalance: 1420000,
     referralCode: 'WARUNG-ENI-01',
     address: 'Jl. Ki Buyut Roda No. 88',
     district: 'Arjawinangun',
-    createdAt: '2025-11-20'
+    createdAt: '2025-11-20',
+    credibilityScore: { plus: 532, minus: 1, totalScore: 531 }
   },
   {
     id: 'user_courier_1',
@@ -49,11 +51,11 @@ export const INITIAL_USERS: UserProfile[] = [
     role: 'courier',
     status: 'active',
     points: 310,
-    walletBalance: 320000,
     referralCode: 'KURIR-ASEP-07',
     address: 'Desa Kebonturi RT 03/RW 02',
     district: 'Kebonturi, Arjawinangun',
-    createdAt: '2025-12-01'
+    createdAt: '2025-12-01',
+    credibilityScore: { plus: 420, minus: 0, totalScore: 420 }
   },
   {
     id: 'user_admin_1',
@@ -64,11 +66,11 @@ export const INITIAL_USERS: UserProfile[] = [
     role: 'admin',
     status: 'active',
     points: 9999,
-    walletBalance: 24890000,
     referralCode: 'FOUNDER-ARJA',
     address: 'Kantor Pusat MitraArja, Ruko Pantura No. 15',
     district: 'Arjawinangun',
-    createdAt: '2025-10-01'
+    createdAt: '2025-10-01',
+    credibilityScore: { plus: 999, minus: 0, totalScore: 999 }
   }
 ];
 
@@ -91,7 +93,8 @@ export const INITIAL_MERCHANTS: Merchant[] = [
     openHours: '09:00 - 22:00',
     minOrder: 15000,
     phone: '081234567890',
-    activePromo: 'Diskon 20% Min Belanja 40rb'
+    activePromo: 'Diskon 20% Min Belanja 40rb',
+    credibilityScore: { plus: 342, minus: 1, totalScore: 341 }
   },
   {
     id: 'm2',
@@ -111,7 +114,8 @@ export const INITIAL_MERCHANTS: Merchant[] = [
     openHours: '10:00 - 21:30',
     minOrder: 12000,
     phone: '081344556677',
-    activePromo: 'Gratis Es Teh Manis'
+    activePromo: 'Gratis Es Teh Manis',
+    credibilityScore: { plus: 512, minus: 0, totalScore: 512 }
   },
   {
     id: 'm3',
@@ -131,7 +135,8 @@ export const INITIAL_MERCHANTS: Merchant[] = [
     openHours: '08:00 - 23:00',
     minOrder: 10000,
     phone: '085811223344',
-    activePromo: 'Beli 2 Kopi Susu Gratis Roti'
+    activePromo: 'Beli 2 Kopi Susu Gratis Roti',
+    credibilityScore: { plus: 185, minus: 0, totalScore: 185 }
   },
   {
     id: 'm4',
@@ -150,7 +155,8 @@ export const INITIAL_MERCHANTS: Merchant[] = [
     logo: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=200&q=80',
     openHours: '16:00 - 24:00',
     minOrder: 25000,
-    phone: '087788990011'
+    phone: '087788990011',
+    credibilityScore: { plus: 120, minus: 2, totalScore: 118 }
   },
   {
     id: 'm5',
@@ -170,7 +176,8 @@ export const INITIAL_MERCHANTS: Merchant[] = [
     openHours: '09:00 - 21:00',
     minOrder: 30000,
     phone: '081299001122',
-    activePromo: 'Cashback 5rb MitraPay'
+    activePromo: 'Potongan Langsung 5rb',
+    credibilityScore: { plus: 480, minus: 0, totalScore: 480 }
   },
   {
     id: 'm6',
@@ -189,7 +196,8 @@ export const INITIAL_MERCHANTS: Merchant[] = [
     logo: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=200&q=80',
     openHours: '16:30 - 23:00',
     minOrder: 20000,
-    phone: '085222333444'
+    phone: '085222333444',
+    credibilityScore: { plus: 230, minus: 1, totalScore: 229 }
   },
   {
     id: 'm7',
@@ -209,7 +217,8 @@ export const INITIAL_MERCHANTS: Merchant[] = [
     openHours: '06:00 - 18:00',
     minOrder: 20000,
     phone: '081322114455',
-    activePromo: 'Beras Pandan Wangi Promo'
+    activePromo: 'Beras Pandan Wangi Promo',
+    credibilityScore: { plus: 670, minus: 0, totalScore: 670 }
   },
   {
     id: 'm8',
@@ -228,7 +237,8 @@ export const INITIAL_MERCHANTS: Merchant[] = [
     logo: 'https://images.unsplash.com/photo-1597362925123-77861d3fbac7?auto=format&fit=crop&w=200&q=80',
     openHours: '05:30 - 14:00',
     minOrder: 15000,
-    phone: '081277665544'
+    phone: '081277665544',
+    credibilityScore: { plus: 310, minus: 0, totalScore: 310 }
   },
   {
     id: 'm9',
@@ -247,7 +257,8 @@ export const INITIAL_MERCHANTS: Merchant[] = [
     logo: 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=200&q=80',
     openHours: '07:00 - 21:00',
     minOrder: 18000,
-    phone: '087812349876'
+    phone: '087812349876',
+    credibilityScore: { plus: 195, minus: 1, totalScore: 194 }
   },
   {
     id: 'm10',
@@ -267,7 +278,8 @@ export const INITIAL_MERCHANTS: Merchant[] = [
     openHours: '24 Jam Buka',
     minOrder: 10000,
     phone: '081211223344',
-    activePromo: 'Layanan Resep Cepat'
+    activePromo: 'Layanan Resep Cepat',
+    credibilityScore: { plus: 460, minus: 0, totalScore: 460 }
   },
   {
     id: 'm11',
@@ -287,7 +299,8 @@ export const INITIAL_MERCHANTS: Merchant[] = [
     openHours: '08:30 - 21:00',
     minOrder: 22000,
     phone: '081987654321',
-    activePromo: 'Khas Cirebon Asli'
+    activePromo: 'Khas Cirebon Asli',
+    credibilityScore: { plus: 590, minus: 0, totalScore: 590 }
   },
   {
     id: 'm12',
@@ -306,12 +319,13 @@ export const INITIAL_MERCHANTS: Merchant[] = [
     logo: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=200&q=80',
     openHours: '06:00 - 13:00 (Tutup)',
     minOrder: 10000,
-    phone: '085611224455'
+    phone: '085611224455',
+    credibilityScore: { plus: 150, minus: 0, totalScore: 150 }
   }
 ];
 
 export const INITIAL_PRODUCTS: Product[] = [
-  // Mas Gondrong (m1)
+  // Warung Makan & Resto Lokal
   {
     id: 'p1',
     merchantId: 'm1',
@@ -322,7 +336,11 @@ export const INITIAL_PRODUCTS: Product[] = [
     description: 'Ayam goreng renyah digeprek dengan sambal korek bawang asli rawit merah segar.',
     image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=500&q=80',
     inStock: true,
-    promoBadge: 'Best Seller'
+    promoBadge: 'Best Seller',
+    storeName: 'Ayam Geprek Mas Gondrong',
+    storeType: 'warung_makan',
+    salesCount: 2450,
+    rating: 4.9
   },
   {
     id: 'p2',
@@ -334,7 +352,11 @@ export const INITIAL_PRODUCTS: Product[] = [
     description: 'Sudah lengkap nasi putih hangat, lalapan timun kol, dan es teh manis jumbo.',
     image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=500&q=80',
     inStock: true,
-    promoBadge: 'Hemat 4rb'
+    promoBadge: 'Hemat 4rb',
+    storeName: 'Ayam Geprek Mas Gondrong',
+    storeType: 'warung_makan',
+    salesCount: 1890,
+    rating: 4.8
   },
   {
     id: 'p3',
@@ -344,10 +366,14 @@ export const INITIAL_PRODUCTS: Product[] = [
     price: 20000,
     description: 'Ayam dibakar dengan bumbu madu khas manis gurih meresap sampai tulang.',
     image: 'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?auto=format&fit=crop&w=500&q=80',
-    inStock: true
+    inStock: true,
+    storeName: 'Ayam Geprek Mas Gondrong',
+    storeType: 'warung_makan',
+    salesCount: 680,
+    rating: 4.7
   },
 
-  // Bakso Mas Joko (m2)
+  // Bakso & Mie Ayam
   {
     id: 'p4',
     merchantId: 'm2',
@@ -358,7 +384,11 @@ export const INITIAL_PRODUCTS: Product[] = [
     description: 'Bakso sapi asli ukuran besar berisi bakso kecil, telur puyuh, dan cincang daging sapi gurih.',
     image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=500&q=80',
     inStock: true,
-    promoBadge: 'Favorit'
+    promoBadge: 'Favorit',
+    storeName: 'Bakso Beranak Mas Joko',
+    storeType: 'warung_makan',
+    salesCount: 3120,
+    rating: 4.9
   },
   {
     id: 'p5',
@@ -368,33 +398,14 @@ export const INITIAL_PRODUCTS: Product[] = [
     price: 18000,
     description: 'Mie kenyal gurih dengan topping ayam kecap melimpah plus 2 butir bakso urat renyah.',
     image: 'https://images.unsplash.com/photo-1612927601601-6638404737ce?auto=format&fit=crop&w=500&q=80',
-    inStock: true
-  },
-
-  // Kopi Janji Roda (m3)
-  {
-    id: 'p6',
-    merchantId: 'm3',
-    name: 'Es Kopi Susu Gula Aren Arjawinangun',
-    category: 'Kopi',
-    price: 16000,
-    description: 'Espresso biji kopi lokal Robusta Cirebon dipadu susu creamy dan gula aren organik.',
-    image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=500&q=80',
     inStock: true,
-    promoBadge: 'Top 1'
-  },
-  {
-    id: 'p7',
-    merchantId: 'm3',
-    name: 'Roti Toast Cokelat Keju Melt',
-    category: 'Kopi',
-    price: 14000,
-    description: 'Roti panggang mentega dengan filling cokelat lumer dan parutan keju cheddar gurih.',
-    image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=500&q=80',
-    inStock: true
+    storeName: 'Bakso Beranak Mas Joko',
+    storeType: 'warung_makan',
+    salesCount: 1420,
+    rating: 4.8
   },
 
-  // Sate H. Apud (m5)
+  // Sate Kambing & Gule
   {
     id: 'p8',
     merchantId: 'm5',
@@ -404,7 +415,11 @@ export const INITIAL_PRODUCTS: Product[] = [
     description: 'Daging kambing muda empuk tanpa bau prengus, disajikan bumbu kecap cabe rawit tomat.',
     image: 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?auto=format&fit=crop&w=500&q=80',
     inStock: true,
-    promoBadge: 'Legendaris'
+    promoBadge: 'Legendaris',
+    storeName: 'Sate H. Apud Cab. Arja',
+    storeType: 'warung_makan',
+    salesCount: 4210,
+    rating: 4.9
   },
   {
     id: 'p9',
@@ -414,10 +429,46 @@ export const INITIAL_PRODUCTS: Product[] = [
     price: 32000,
     description: 'Kuah gule gurih kental berempah khas Cirebon dengan potongan iga kambing empuk.',
     image: 'https://images.unsplash.com/photo-1547928576-a4a33237cbc3?auto=format&fit=crop&w=500&q=80',
-    inStock: true
+    inStock: true,
+    storeName: 'Sate H. Apud Cab. Arja',
+    storeType: 'warung_makan',
+    salesCount: 1540,
+    rating: 4.8
   },
 
-  // Martabak Istimewa (m6)
+  // Empal Gentong & UMKM Lokal
+  {
+    id: 'p23',
+    merchantId: 'm11',
+    name: 'Empal Gentong Daging Sapi Istimewa',
+    category: 'UMKM Lokal',
+    price: 30000,
+    originalPrice: 35000,
+    description: 'Masakan khas Cirebon dimasak dalam gentong tanah liat dengan kayu asam selama berjam-jam.',
+    image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=500&q=80',
+    inStock: true,
+    promoBadge: 'Kuliner Juara',
+    storeName: 'Empal Gentong Mang Darma',
+    storeType: 'warung_makan',
+    salesCount: 3890,
+    rating: 4.9
+  },
+  {
+    id: 'p24',
+    merchantId: 'm11',
+    name: 'Empal Asam Segar Cirebonan',
+    category: 'UMKM Lokal',
+    price: 30000,
+    description: 'Kuah bening asam belimbing wuluh segar dengan irisan daging sapi empuk dan babat gurih.',
+    image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=500&q=80',
+    inStock: true,
+    storeName: 'Empal Gentong Mang Darma',
+    storeType: 'warung_makan',
+    salesCount: 1250,
+    rating: 4.7
+  },
+
+  // Jajanan & Camilan Pasar
   {
     id: 'p10',
     merchantId: 'm6',
@@ -426,7 +477,11 @@ export const INITIAL_PRODUCTS: Product[] = [
     price: 35000,
     description: 'Kulit martabak renyah dengan isian telur bebek, daun bawang segar dan daging sapi cincang lezat.',
     image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=500&q=80',
-    inStock: true
+    inStock: true,
+    storeName: 'Martabak Bangka Istimewa',
+    storeType: 'jajanan',
+    salesCount: 2210,
+    rating: 4.8
   },
   {
     id: 'p11',
@@ -436,10 +491,103 @@ export const INITIAL_PRODUCTS: Product[] = [
     price: 28000,
     description: 'Adonan manis bersarang tebal lembut dengan margarin wismann, cokelat meses, dan kacang sangrai.',
     image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=500&q=80',
-    inStock: true
+    inStock: true,
+    storeName: 'Martabak Bangka Istimewa',
+    storeType: 'jajanan',
+    salesCount: 1980,
+    rating: 4.8
+  },
+  {
+    id: 'p25',
+    merchantId: 'm6',
+    name: 'Tahu Gejrot Bumbu Cabe Rawit Uleg',
+    category: 'Jajanan',
+    price: 10000,
+    originalPrice: 12000,
+    description: 'Tahu pong garing dengan kuah gula aren asem segar dan cabai rawit pedas nampol.',
+    image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=500&q=80',
+    inStock: true,
+    promoBadge: 'Khas Cirebon',
+    storeName: 'Jajanan Tradisional Arja',
+    storeType: 'jajanan',
+    salesCount: 4890,
+    rating: 4.9
+  },
+  {
+    id: 'p26',
+    merchantId: 'm6',
+    name: 'Cireng Crispy Bumbu Rujak Pedas Manis',
+    category: 'Jajanan',
+    price: 12000,
+    description: 'Cireng renyah kenyal isi 10 pcs dicocol sambal rujak gula aren kental pedas gurih.',
+    image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=500&q=80',
+    inStock: true,
+    storeName: 'Jajanan Tradisional Arja',
+    storeType: 'jajanan',
+    salesCount: 3400,
+    rating: 4.8
+  },
+  {
+    id: 'p27',
+    merchantId: 'm6',
+    name: 'Pisang Aroma Cokelat Keju Crispy',
+    category: 'Jajanan',
+    price: 15000,
+    description: 'Pisang manis dibalut kulit lumpia renyah dengan lelehan dark chocolate dan keju gurih.',
+    image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=500&q=80',
+    inStock: true,
+    storeName: 'Jajanan Tradisional Arja',
+    storeType: 'jajanan',
+    salesCount: 1650,
+    rating: 4.7
   },
 
-  // Toko Sembako Berkah (m7)
+  // Minuman & Kopi
+  {
+    id: 'p6',
+    merchantId: 'm3',
+    name: 'Es Kopi Susu Gula Aren Arjawinangun',
+    category: 'Kopi',
+    price: 16000,
+    description: 'Espresso biji kopi lokal Robusta Cirebon dipadu susu creamy dan gula aren organik.',
+    image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=500&q=80',
+    inStock: true,
+    promoBadge: 'Top 1',
+    storeName: 'Kedai Kopi Janji Roda',
+    storeType: 'minuman',
+    salesCount: 5200,
+    rating: 4.9
+  },
+  {
+    id: 'p7',
+    merchantId: 'm3',
+    name: 'Roti Toast Cokelat Keju Melt',
+    category: 'Kopi',
+    price: 14000,
+    description: 'Roti panggang mentega dengan filling cokelat lumer dan parutan keju cheddar gurih.',
+    image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=500&q=80',
+    inStock: true,
+    storeName: 'Kedai Kopi Janji Roda',
+    storeType: 'minuman',
+    salesCount: 1100,
+    rating: 4.6
+  },
+  {
+    id: 'p28',
+    merchantId: 'm3',
+    name: 'Es Teh Manis Melati Jumbo Segar',
+    category: 'Minuman',
+    price: 5000,
+    description: 'Seduhan teh melati wangi dan manis alami porsi cup 22oz super dingin menyegarkan.',
+    image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=500&q=80',
+    inStock: true,
+    storeName: 'Kedai Kopi Janji Roda',
+    storeType: 'minuman',
+    salesCount: 6700,
+    rating: 4.9
+  },
+
+  // Warung Sembako & Dapur
   {
     id: 'p12',
     merchantId: 'm7',
@@ -450,7 +598,11 @@ export const INITIAL_PRODUCTS: Product[] = [
     description: 'Beras pulen harum alami tanpa pemutih dan tanpa pengawet kualitas super.',
     image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=500&q=80',
     inStock: true,
-    promoBadge: 'Harga Grosir'
+    promoBadge: 'Harga Grosir',
+    storeName: 'Toko Sembako Berkah Pasar',
+    storeType: 'warung_sembako',
+    salesCount: 4320,
+    rating: 4.9
   },
   {
     id: 'p13',
@@ -460,7 +612,11 @@ export const INITIAL_PRODUCTS: Product[] = [
     price: 34000,
     description: 'Minyak goreng jernih 2x penyaringan untuk masakan renyah sempurna.',
     image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=500&q=80',
-    inStock: true
+    inStock: true,
+    storeName: 'Toko Sembako Berkah Pasar',
+    storeType: 'warung_sembako',
+    salesCount: 3890,
+    rating: 4.8
   },
   {
     id: 'p14',
@@ -470,10 +626,12 @@ export const INITIAL_PRODUCTS: Product[] = [
     price: 28000,
     description: 'Telur ayam negeri segar langsung dari peternakan lokal Arjawinangun.',
     image: 'https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=500&q=80',
-    inStock: true
+    inStock: true,
+    storeName: 'Toko Sembako Berkah Pasar',
+    storeType: 'warung_sembako',
+    salesCount: 5120,
+    rating: 4.9
   },
-
-  // Sayur Segar (m8)
   {
     id: 'p15',
     merchantId: 'm8',
@@ -482,7 +640,11 @@ export const INITIAL_PRODUCTS: Product[] = [
     price: 10000,
     description: 'Isi: Wortel, kol, buncis, kentang, daun bawang, seledri dan racik sop.',
     image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=500&q=80',
-    inStock: true
+    inStock: true,
+    storeName: 'Sayur & Buah Kebonturi',
+    storeType: 'warung_sembako',
+    salesCount: 2300,
+    rating: 4.7
   },
   {
     id: 'p16',
@@ -493,10 +655,12 @@ export const INITIAL_PRODUCTS: Product[] = [
     description: 'Manis legit wangi khas buah unggulan Cirebon baru dipetik.',
     image: 'https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=500&q=80',
     inStock: true,
-    promoBadge: 'Khas Daerah'
+    promoBadge: 'Khas Daerah',
+    storeName: 'Sayur & Buah Kebonturi',
+    storeType: 'warung_sembako',
+    salesCount: 1420,
+    rating: 4.8
   },
-
-  // Frozen & Galon (m9)
   {
     id: 'p17',
     merchantId: 'm9',
@@ -505,20 +669,14 @@ export const INITIAL_PRODUCTS: Product[] = [
     price: 21000,
     description: 'Tukar galon kosong dengan galon Aqua resmi segel asli.',
     image: 'https://images.unsplash.com/photo-1548839140-29a749e1bc4e?auto=format&fit=crop&w=500&q=80',
-    inStock: true
-  },
-  {
-    id: 'p18',
-    merchantId: 'm9',
-    name: 'Nugget Ayam Fiesta Crispy 500g',
-    category: 'Frozen Food',
-    price: 45000,
-    description: 'Nugget ayam berlapis bubble crumbs renyah disukai anak-anak.',
-    image: 'https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=500&q=80',
-    inStock: true
+    inStock: true,
+    storeName: 'Depo Galon & Frozen Arja',
+    storeType: 'warung_sembako',
+    salesCount: 3800,
+    rating: 4.8
   },
 
-  // Apotek Kimia Mandiri (m10)
+  // Apotek & Kesehatan
   {
     id: 'p19',
     merchantId: 'm10',
@@ -528,7 +686,11 @@ export const INITIAL_PRODUCTS: Product[] = [
     description: 'Meredakan sakit kepala, sakit gigi, dan menurunkan demam.',
     image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=500&q=80',
     inStock: true,
-    isHardMedicine: false
+    isHardMedicine: false,
+    storeName: 'Apotek Kimia Mandiri 24 Jam',
+    storeType: 'apotek',
+    salesCount: 1620,
+    rating: 4.9
   },
   {
     id: 'p20',
@@ -540,7 +702,11 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: 'https://images.unsplash.com/photo-1550572017-edd951aa8f72?auto=format&fit=crop&w=500&q=80',
     inStock: true,
     isHardMedicine: false,
-    promoBadge: 'Imunitas'
+    promoBadge: 'Imunitas',
+    storeName: 'Apotek Kimia Mandiri 24 Jam',
+    storeType: 'apotek',
+    salesCount: 890,
+    rating: 4.8
   },
   {
     id: 'p21',
@@ -552,42 +718,11 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=500&q=80',
     inStock: true,
     isHardMedicine: true,
-    promoBadge: 'Wajib Resep'
-  },
-  {
-    id: 'p22',
-    merchantId: 'm10',
-    name: 'Tensimeter Digital Lengan Omron Asli',
-    category: 'Alat Kesehatan',
-    price: 420000,
-    description: 'Alat ukur tekanan darah digital akurat bergaransi resmi.',
-    image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=500&q=80',
-    inStock: true,
-    isHardMedicine: false
-  },
-
-  // Empal Gentong Mang Darma (m11)
-  {
-    id: 'p23',
-    merchantId: 'm11',
-    name: 'Empal Gentong Daging Sapi Istimewa',
-    category: 'UMKM Lokal',
-    price: 30000,
-    originalPrice: 35000,
-    description: 'Masakan khas Cirebon dimasak dalam gentong tanah liat dengan kayu asam selama berjam-jam.',
-    image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=500&q=80',
-    inStock: true,
-    promoBadge: 'Kuliner Juara'
-  },
-  {
-    id: 'p24',
-    merchantId: 'm11',
-    name: 'Empal Asam Segar Cirebonan',
-    category: 'UMKM Lokal',
-    price: 30000,
-    description: 'Kuah bening asam belimbing wuluh segar dengan irisan daging sapi empuk dan babat gurih.',
-    image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=500&q=80',
-    inStock: true
+    promoBadge: 'Wajib Resep',
+    storeName: 'Apotek Kimia Mandiri 24 Jam',
+    storeType: 'apotek',
+    salesCount: 310,
+    rating: 4.7
   }
 ];
 
@@ -605,7 +740,7 @@ export const INITIAL_COURIERS: CourierProfile[] = [
     isPremiumMember: true,
     earningsToday: 145000,
     completedOrdersToday: 9,
-    walletBalance: 320000
+    credibilityScore: { plus: 395, minus: 0, totalScore: 395 }
   },
   {
     id: 'courier_2',
@@ -620,7 +755,7 @@ export const INITIAL_COURIERS: CourierProfile[] = [
     isPremiumMember: false,
     earningsToday: 82000,
     completedOrdersToday: 5,
-    walletBalance: 165000
+    credibilityScore: { plus: 180, minus: 1, totalScore: 179 }
   },
   {
     id: 'courier_3',
@@ -635,7 +770,7 @@ export const INITIAL_COURIERS: CourierProfile[] = [
     isPremiumMember: true,
     earningsToday: 210000,
     completedOrdersToday: 14,
-    walletBalance: 680000
+    credibilityScore: { plus: 510, minus: 0, totalScore: 510 }
   }
 ];
 
@@ -712,8 +847,8 @@ export const INITIAL_ORDERS: Order[] = [
     destinationAddress: 'Griya Permata Arjawinangun Blok B4 No. 12, Jungjang',
     distanceKm: 2.4,
     status: 'on_delivery',
-    paymentMethod: 'mitrapay',
-    paymentStatus: 'paid',
+    paymentMethod: 'cod',
+    paymentStatus: 'pending',
     subtotal: 60000,
     deliveryFee: 8800,
     platformFee: 1500,
@@ -724,16 +859,20 @@ export const INITIAL_ORDERS: Order[] = [
     platformCommission: 6000,
     createdAt: '2026-10-15 08:35',
     estimatedMinutes: 12,
-    progressPercent: 75
+    progressPercent: 75,
+    customerCredibility: { plus: 148, minus: 0, totalScore: 148 },
+    courierCredibility: { plus: 395, minus: 0, totalScore: 395 },
+    merchantCredibility: { plus: 342, minus: 1, totalScore: 341 },
+    isAntiFakeOrderConfirmed: true
   }
 ];
 
 export const INITIAL_FRAUD_ALERTS: FraudAlert[] = [
   {
     id: 'fraud_1',
-    type: 'voucher_abuse',
-    severity: 'medium',
-    description: 'Penggunaan kode promo referral yang sama dari 4 nomor baru dalam rentang 10 menit.',
+    type: 'fake_order',
+    severity: 'high',
+    description: '⚠️ PERINGATAN FAKE ORDER: Percobaan pemesanan fiktif COD dengan nomor ganda terdeteksi oleh sistem.',
     targetUser: '0895-xxxx-8812 (IP Desa Kebonturi)',
     timestamp: '2026-10-15 07:15',
     status: 'flagged'
@@ -741,8 +880,8 @@ export const INITIAL_FRAUD_ALERTS: FraudAlert[] = [
   {
     id: 'fraud_2',
     type: 'fake_order',
-    severity: 'low',
-    description: 'Order kirim barang dibatalkan 3x berturut-turut pada akun belum terverifikasi KTP.',
+    severity: 'medium',
+    description: 'Penolakan COD tanpa alasan terverifikasi. Poin kredibilitas dikurangi (-20).',
     targetUser: 'Akun Tamu (Device ID #90812)',
     timestamp: '2026-10-14 21:40',
     status: 'reviewed'
@@ -757,5 +896,107 @@ export const INITIAL_ADMIN_STATS: AdminStats = {
   totalMerchants: 265,
   totalCouriers: 142,
   totalOrders: 11240,
-  activeOrdersCount: 18
+  activeOrdersCount: 18,
+  pendingDonationsCount: 1,
+  activeEmergenciesCount: 2
 };
+
+// DONASI WARGA (AWD Peduli) - Hanya bisa disetujui Admin
+export const INITIAL_DONATIONS: DonationCampaign[] = [
+  {
+    id: 'don_1',
+    title: 'Bantu Pengobatan & Operasi Pak Sukirno (Warga Jungjang)',
+    category: 'kesehatan',
+    targetAmount: 15000000,
+    collectedAmount: 8450000,
+    donorCount: 142,
+    organizerName: 'Keluarga Pak Sukirno & RT 03 Jungjang',
+    organizerPhone: '081233445566',
+    description: 'Pak Sukirno (buruh harian lepas) membutuhkan tindakan operasi segera akibat kecelakaan kerja. Mari ulurkan tangan kita bersama warga Arjawinangun.',
+    image: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80',
+    status: 'approved',
+    adminApprovalNote: 'Telah diverifikasi dokumen medis RSUD Arjawinangun oleh Admin AWD.',
+    createdAt: '2026-10-10',
+    approvedAt: '2026-10-11'
+  },
+  {
+    id: 'don_2',
+    title: 'Renovasi Atap & Sarana Musholla Al-Ikhlas Blok Karang',
+    category: 'sosial',
+    targetAmount: 20000000,
+    collectedAmount: 14200000,
+    donorCount: 210,
+    organizerName: 'DKM Musholla Al-Ikhlas',
+    organizerPhone: '085711223344',
+    description: 'Musholla Al-Ikhlas mengalami kebocoran parah saat hujan dan membutuhkan penggantian atap serta karpet untuk kenyamanan ibadah warga sekitar.',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80',
+    status: 'approved',
+    adminApprovalNote: 'Disetujui Admin AWD setelah tinjauan lokasi langsung bersama DKM.',
+    createdAt: '2026-10-05',
+    approvedAt: '2026-10-06'
+  },
+  {
+    id: 'don_3',
+    title: 'Santunan Pendidikan 60 Anak Yatim Piatu Arjawinangun',
+    category: 'yatim',
+    targetAmount: 12000000,
+    collectedAmount: 9600000,
+    donorCount: 185,
+    organizerName: 'Komunitas Wong Nangun Berbagi',
+    organizerPhone: '081399887711',
+    description: 'Pemberian paket perlengkapan sekolah, sepatu, tas, dan santunan tunai bagi anak yatim piatu di pelosok Arjawinangun.',
+    image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80',
+    status: 'approved',
+    adminApprovalNote: 'Terverifikasi program rutin tahunan komunitas terpercaya.',
+    createdAt: '2026-10-01',
+    approvedAt: '2026-10-02'
+  },
+  {
+    id: 'don_4',
+    title: 'Bantuan Modal Usaha Gerobak UMKM Binaan Warga Kebonturi',
+    category: 'sosial',
+    targetAmount: 5000000,
+    collectedAmount: 0,
+    donorCount: 0,
+    organizerName: 'Karang Taruna Tunas Harapan Kebonturi',
+    organizerPhone: '087811224488',
+    description: 'Penggalangan dana untuk penyediaan gerobak jualan es & jajanan bagi warga prasejahtera agar mandiri berwirausaha.',
+    image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80',
+    status: 'pending_approval',
+    createdAt: '2026-10-21'
+  }
+];
+
+// TOLONG (Bantuan Segera SOS Arjawinangun)
+export const INITIAL_EMERGENCIES: EmergencyRequest[] = [
+  {
+    id: 'emg_1',
+    userId: 'user_emg_1',
+    userName: 'Ibu Siti Romlah',
+    userPhone: '081299887722',
+    category: 'ban_bocor',
+    title: 'Ban Motor Bocor di By Pass Depan RSUD Arjawinangun',
+    description: 'Ban belakang bocor kena paku, bawa anak kecil arah pulang ke Kebonturi. Butuh tambal ban keliling atau diantar ke tukang tambal ban terdekat.',
+    location: 'Jl. By Pass KM 18 (Depan Gerbang RSUD Arjawinangun)',
+    lat: -6.6385,
+    lng: 108.4055,
+    status: 'searching',
+    createdAt: '2026-10-22 20:45'
+  },
+  {
+    id: 'emg_2',
+    userId: 'user_emg_2',
+    userName: 'Mas Rizki Pratama',
+    userPhone: '085744332211',
+    category: 'bensin_habis',
+    title: 'Bensin Habis Depan Stasiun KA Arjawinangun',
+    description: 'Motor mogok kehabisan bensin, warung bensin eceran terdekat tutup. Tolong titip belikan bensin 2 liter Pertalite.',
+    location: 'Area Parkir Timur Stasiun KA Arjawinangun',
+    lat: -6.6415,
+    lng: 108.4095,
+    status: 'responded',
+    responderName: 'Kang Asep (Driver AWD)',
+    responderPhone: '085712348899',
+    createdAt: '2026-10-22 20:10'
+  }
+];

@@ -141,27 +141,49 @@ export const CourierDashboard: React.FC<CourierDashboardProps> = ({
             <div>
               <h3 className="font-extrabold text-sm text-white">{courier.name}</h3>
               <p className="text-xs text-emerald-200 mt-0.5">{courier.vehicle} • {courier.licensePlate}</p>
-              <div className="flex items-center gap-2 mt-1">
+              <div className="flex flex-wrap items-center gap-2 mt-1">
                 <span className="flex items-center gap-0.5 text-amber-300 text-xs font-bold">
                   <Star className="w-3.5 h-3.5 fill-current" />
                   {courier.rating}
                 </span>
                 <span>•</span>
                 {getLevelBadge(courier.level)}
+                <span>•</span>
+                {/* Numeric Credibility Points (+ / -) */}
+                <span className="bg-emerald-950/70 border border-emerald-400/40 text-emerald-300 font-mono text-[10px] font-extrabold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
+                  <ShieldCheck className="w-3 h-3 text-emerald-400 inline" />
+                  Kredibilitas: <span className="text-emerald-300">+{courier.credibilityScore?.plus ?? 395}</span> / <span className="text-rose-400">-{courier.credibilityScore?.minus ?? 0}</span>
+                </span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
+      {/* PROMINENT ANTI-FAKE ORDER WARNING FOR DRIVER */}
+      <div className="bg-amber-50 border-2 border-amber-300 rounded-2xl p-3.5 flex items-start gap-3 shadow-xs">
+        <div className="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-xs">
+          <AlertCircle className="w-5 h-5" />
+        </div>
+        <div className="flex-1 text-xs">
+          <div className="flex items-center gap-1.5 font-black text-amber-950">
+            <span>⚠️ AWAS FAKE ORDER (PESANAN FIKTIF)!</span>
+            <span className="bg-amber-200 text-amber-900 text-[9px] px-1.5 py-0.2 rounded font-extrabold uppercase">Waspada</span>
+          </div>
+          <p className="text-amber-900 mt-0.5 leading-relaxed text-[11px]">
+            Sebelum belanja atau meluncur mengantar COD bernilai besar, <strong>wajib telepon atau chat customer</strong> untuk memastikan alamat dan nomor HP aktif. Laporkan langsung ke Super Admin jika ada indikasi penipuan.
+          </p>
+        </div>
+      </div>
+
       {/* KPI Counters: Pendapatan Hari Ini, Pesanan Hari Ini */}
       <div className="grid grid-cols-2 gap-3">
         <div className="p-3.5 bg-white border border-slate-200 rounded-2xl shadow-xs">
-          <span className="text-[10px] font-bold text-slate-400 uppercase">Pendapatan Hari Ini</span>
+          <span className="text-[10px] font-bold text-slate-400 uppercase">Omzet Tunai & QRIS Hari Ini</span>
           <p className="text-lg font-black text-emerald-700 mt-0.5">
             Rp {courier.earningsToday.toLocaleString('id-ID')}
           </p>
-          <span className="text-[10px] text-slate-500">Saldo: Rp {courier.walletBalance.toLocaleString('id-ID')}</span>
+          <span className="text-[10px] text-emerald-600 font-semibold">Penerimaan Langsung Tanpa Saldo Tertahan</span>
         </div>
 
         <div className="p-3.5 bg-white border border-slate-200 rounded-2xl shadow-xs">
@@ -196,14 +218,30 @@ export const CourierDashboard: React.FC<CourierDashboardProps> = ({
                 <span className="text-sm font-black text-white">
                   +Rp {pendingDispatchOrder.courierEarned.toLocaleString('id-ID')}
                 </span>
-                <p className="text-[10px] text-amber-200">Ongkir Bersih</p>
+                <p className="text-[10px] text-amber-200">Ongkir Diterima Tunai/QRIS</p>
               </div>
+            </div>
+
+            {/* Customer Credibility Badge on Dispatch */}
+            <div className="flex items-center justify-between bg-black/20 px-2.5 py-1.5 rounded-xl text-xs">
+              <span className="text-[11px] text-amber-100">Pemesan: <strong>{pendingDispatchOrder.customerName}</strong></span>
+              <span className="bg-emerald-500/90 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1">
+                <ShieldCheck className="w-3 h-3" />
+                Kredibilitas: +148 / -0
+              </span>
             </div>
 
             <div className="flex items-center gap-2 text-xs pt-1 border-t border-white/20">
               <MapPin className="w-3.5 h-3.5 text-rose-300" />
               <span className="truncate">Antar ke: {pendingDispatchOrder.destinationAddress}</span>
               <span className="font-bold ml-auto shrink-0">{pendingDispatchOrder.distanceKm} KM</span>
+            </div>
+
+            <div className="text-[10px] bg-amber-950/40 px-2.5 py-1 rounded-lg text-amber-100 flex items-center justify-between">
+              <span>Metode Pembayaran:</span>
+              <span className="font-black text-amber-200 uppercase">
+                {pendingDispatchOrder.paymentMethod === 'cod' ? '💵 Bayar Tunai (COD)' : (pendingDispatchOrder.paymentMethod === 'qris' ? '📲 QRIS Langsung' : '🏦 Transfer Bank')}
+              </span>
             </div>
           </div>
 
@@ -370,17 +408,24 @@ export const CourierDashboard: React.FC<CourierDashboardProps> = ({
         </div>
       </div>
 
-      {/* Saldo Dompet & Tarik Dana Kurir */}
-      <div className="p-4 bg-slate-50 border border-slate-200 rounded-3xl space-y-2 text-xs">
-        <div className="flex justify-between items-center">
-          <div>
-            <p className="font-bold text-slate-800">Saldo Dompet Kurir</p>
-            <p className="text-xl font-black text-emerald-800">Rp {courier.walletBalance.toLocaleString('id-ID')}</p>
+      {/* Direct Payment Guarantee & Anti Fake Order Notice for Courier */}
+      <div className="p-4 bg-slate-900 text-white rounded-3xl space-y-2 text-xs border border-slate-800 shadow-md">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+              ✓
+            </div>
+            <div>
+              <p className="font-black text-white text-xs">Sistem Pembayaran Langsung Mitra Driver</p>
+              <p className="text-[10px] text-emerald-400">Tanpa Dompet Digital & Bebas Biaya Tarik Saldo</p>
+            </div>
           </div>
-          <span className="text-[11px] text-slate-500">Biaya Tarik: Rp {WITHDRAWAL_FEE.toLocaleString('id-ID')}</span>
+          <span className="text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-500/30 px-2.5 py-1 rounded-full">
+            100% Langsung Cair
+          </span>
         </div>
-        <p className="text-[10px] text-slate-500">
-          Penarikan dana hasil antar order langsung cair ke rekening bank atau dompet digital tanpa menunggu hari kerja.
+        <p className="text-[11px] text-slate-300 leading-relaxed">
+          Semua penghasilan ongkos kirim dan uang barang diterima langsung secara <strong>Tunai (COD)</strong> atau via <strong>QRIS Pribadi Driver/Toko</strong> dari pelanggan tanpa ada potongan saldo tertahan di aplikasi.
         </p>
       </div>
 

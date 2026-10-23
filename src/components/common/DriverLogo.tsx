@@ -57,13 +57,13 @@ export const DriverLogo: React.FC<DriverLogoProps> = ({
       {/* TYPOGRAPHY BADGE UNDER EMBLEM (IF ENABLED) */}
       {showBadge && (
         <div className="mt-3 flex flex-col items-center text-center">
-          {/* Tulisan MITRA (Dibuat Kecil sesuai instruksi) */}
+          {/* Tulisan MITRA & BY WONG NANGUN */}
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-950/80 border border-blue-400/40 text-[10px] font-black uppercase tracking-[0.22em] text-blue-300 shadow-xs mb-1">
             <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-ping" />
-            AWD • MITRA
+            AWD • BY WONG NANGUN
           </div>
 
-          {/* Tulisan ARJAWINANGUN DELIVERY (Dibuat Agak Besar sesuai instruksi) */}
+          {/* Tulisan ARJAWINANGUN DELIVERY */}
           <h2 className="text-lg sm:text-xl font-black uppercase tracking-tight text-white drop-shadow-md">
             ARJAWINANGUN <span className="text-sky-400">DELIVERY</span>
           </h2>

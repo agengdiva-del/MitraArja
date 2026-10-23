@@ -21,31 +21,33 @@ import {
   INITIAL_ADS, 
   INITIAL_ORDERS, 
   INITIAL_FRAUD_ALERTS, 
-  INITIAL_ADMIN_STATS 
+  INITIAL_ADMIN_STATS,
+  INITIAL_DONATIONS,
+  INITIAL_EMERGENCIES
 } from './data/mockData';
+import { DonationCampaign, EmergencyRequest } from './types';
 import { SplashScreen } from './components/common/SplashScreen';
 import { AuthModal, AuthInitialTab } from './components/auth/AuthModal';
 import { HomeScreen } from './components/customer/HomeScreen';
 import { StoreDetailModal } from './components/customer/StoreDetailModal';
 import { PackageDeliveryModal } from './components/customer/PackageDeliveryModal';
-import { BillsAndPpobModal } from './components/customer/BillsAndPpobModal';
-import { EventAndJastipModal } from './components/customer/EventAndJastipModal';
+import { DonationModal } from './components/customer/DonationModal';
+import { EmergencyHelpModal } from './components/customer/EmergencyHelpModal';
 import { CartCheckoutModal } from './components/customer/CartCheckoutModal';
 import { OrderTrackingModal } from './components/customer/OrderTrackingModal';
 import { ChatModal } from './components/customer/ChatModal';
-import { WalletModal } from './components/customer/WalletModal';
 import { OrdersHistoryView } from './components/customer/OrdersHistoryView';
 import { CustomerProfileView } from './components/customer/CustomerProfileView';
 import { MerchantDashboard } from './components/merchant/MerchantDashboard';
 import { CourierDashboard } from './components/courier/CourierDashboard';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { DriverLogo } from './components/common/DriverLogo';
+import { OjekRideModal } from './components/customer/OjekRideModal';
 
 import { 
   Home, 
   ShoppingBag, 
   MessageSquare, 
-  Wallet, 
   User, 
   Lock,
   Store,
@@ -54,7 +56,9 @@ import {
   ChevronDown,
   LogOut,
   MapPin,
-  Sparkles
+  Sparkles,
+  Heart,
+  AlertTriangle
 } from 'lucide-react';
 
 export default function App() {
@@ -77,20 +81,20 @@ export default function App() {
   const [banners, setBanners] = useState<BannerAd[]>(INITIAL_ADS);
   const [fraudAlerts, setFraudAlerts] = useState<FraudAlert[]>(INITIAL_FRAUD_ALERTS);
   const [adminStats, setAdminStats] = useState<AdminStats>(INITIAL_ADMIN_STATS);
+  const [donations, setDonations] = useState<DonationCampaign[]>(INITIAL_DONATIONS);
+  const [emergencies, setEmergencies] = useState<EmergencyRequest[]>(INITIAL_EMERGENCIES);
 
   // Cart & Modals
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [activeCustomerTab, setActiveCustomerTab] = useState<'home' | 'orders' | 'chat' | 'wallet' | 'profile'>('home');
+  const [activeCustomerTab, setActiveCustomerTab] = useState<'home' | 'orders' | 'chat' | 'profile'>('home');
   const [selectedMerchantForDetail, setSelectedMerchantForDetail] = useState<Merchant | null>(null);
+  const [showOjekModal, setShowOjekModal] = useState(false);
   const [showPackageDelivery, setShowPackageDelivery] = useState(false);
-  const [showBillsPpob, setShowBillsPpob] = useState(false);
-  const [billsPpobInitialTab, setBillsPpobInitialTab] = useState<'bills' | 'pulsa' | 'ppob'>('bills');
-  const [showEventJastip, setShowEventJastip] = useState(false);
-  const [eventJastipInitialType, setEventJastipInitialType] = useState<'event' | 'jastip'>('event');
+  const [showDonationModal, setShowDonationModal] = useState(false);
+  const [showEmergencyModal, setShowEmergencyModal] = useState(false);
   const [showCartCheckout, setShowCartCheckout] = useState(false);
   const [trackingOrder, setTrackingOrder] = useState<Order | null>(null);
   const [activeChatOrderId, setActiveChatOrderId] = useState<string | null>(null);
-  const [showWalletModal, setShowWalletModal] = useState(false);
 
   // Active in-progress order for customer view
   const activeOrder = orders.find(o => !['completed', 'cancelled'].includes(o.status)) || null;
@@ -154,7 +158,7 @@ export default function App() {
       distanceKm: newOrderData.distanceKm || 2.0,
       deliveryNotes: newOrderData.deliveryNotes,
       status: newOrderData.status || 'pending',
-      paymentMethod: newOrderData.paymentMethod || 'mitrapay',
+      paymentMethod: newOrderData.paymentMethod || 'cod',
       paymentStatus: newOrderData.paymentStatus || 'paid',
       subtotal: newOrderData.subtotal || 0,
       deliveryFee: newOrderData.deliveryFee || 8000,
@@ -171,19 +175,75 @@ export default function App() {
 
     setOrders(prev => [fullOrder, ...prev]);
 
-    // Update wallet balance if paid with MitraPay
-    if (fullOrder.paymentMethod === 'mitrapay') {
-      setCurrentUser(prev => ({
-        ...prev,
-        walletBalance: Math.max(0, prev.walletBalance - fullOrder.total),
-        points: prev.points + Math.floor(fullOrder.total / 10000)
-      }));
-    }
+    // Increase user credibility (+1 point) for completed/placed direct orders
+    setCurrentUser(prev => ({
+      ...prev,
+      credibilityScore: {
+        plus: (prev.credibilityScore?.plus ?? 148) + 1,
+        minus: prev.credibilityScore?.minus ?? 0,
+        totalScore: (prev.credibilityScore?.totalScore ?? 148) + 1
+      }
+    }));
 
     // Open tracking modal immediately for delivery-based orders
-    if (fullOrder.serviceType !== 'bills' && fullOrder.serviceType !== 'pulsa') {
-      setTrackingOrder(fullOrder);
-    }
+    setTrackingOrder(fullOrder);
+  };
+
+  // Donation Handlers
+  const handleDonate = (campaignId: string, amount: number, _donorName: string, _method: string) => {
+    setDonations(prev => prev.map(c => c.id === campaignId ? {
+      ...c,
+      collectedAmount: c.collectedAmount + amount,
+      donorCount: c.donorCount + 1
+    } : c));
+
+    setCurrentUser(prev => ({
+      ...prev,
+      credibilityScore: {
+        plus: (prev.credibilityScore?.plus ?? 148) + 5,
+        minus: prev.credibilityScore?.minus ?? 0,
+        totalScore: (prev.credibilityScore?.totalScore ?? 148) + 5
+      }
+    }));
+  };
+
+  const handleSubmitNewCampaign = (newCamp: Omit<DonationCampaign, 'id' | 'collectedAmount' | 'donorCount' | 'createdAt' | 'status'>) => {
+    const fullCamp: DonationCampaign = {
+      ...newCamp,
+      id: `don_${Date.now()}`,
+      collectedAmount: 0,
+      donorCount: 0,
+      status: 'pending_approval',
+      createdAt: new Date().toISOString().split('T')[0]
+    };
+    setDonations(prev => [fullCamp, ...prev]);
+  };
+
+  const handleApproveDonation = (campaignId: string, adminNote?: string) => {
+    setDonations(prev => prev.map(c => c.id === campaignId ? {
+      ...c,
+      status: 'approved',
+      adminApprovalNote: adminNote || 'Terverifikasi resmi oleh Super Admin AWD Arjawinangun',
+      approvedAt: new Date().toISOString().split('T')[0]
+    } : c));
+  };
+
+  const handleRejectDonation = (campaignId: string) => {
+    setDonations(prev => prev.map(c => c.id === campaignId ? {
+      ...c,
+      status: 'rejected'
+    } : c));
+  };
+
+  // Emergency SOS Handler
+  const handleSubmitEmergency = (req: Omit<EmergencyRequest, 'id' | 'status' | 'createdAt'>) => {
+    const fullReq: EmergencyRequest = {
+      ...req,
+      id: `emg_${Date.now()}`,
+      status: 'searching',
+      createdAt: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+    };
+    setEmergencies(prev => [fullReq, ...prev]);
   };
 
   // Order status advancement
@@ -222,8 +282,7 @@ export default function App() {
     setCourier(prev => ({
       ...prev,
       earningsToday: prev.earningsToday + 12000,
-      completedOrdersToday: prev.completedOrdersToday + 1,
-      walletBalance: prev.walletBalance + 12000
+      completedOrdersToday: prev.completedOrdersToday + 1
     }));
   };
 
@@ -231,9 +290,11 @@ export default function App() {
     // Rejected order auto shifts to next courier in auto dispatch system
   };
 
-  // Open Service Modals from 10 Main Menus
-  const handleOpenService = (service: ServiceType | 'bills' | 'pulsa' | 'event' | 'jastip') => {
-    if (service === 'food') {
+  // Open Service Modals from Main Menus
+  const handleOpenService = (service: ServiceType) => {
+    if (service === 'ride') {
+      setShowOjekModal(true);
+    } else if (service === 'food') {
       setSelectedMerchantForDetail(merchants[0]);
     } else if (service === 'grocery') {
       const groceryStore = merchants.find(m => m.serviceType === 'grocery') || merchants[6];
@@ -241,23 +302,12 @@ export default function App() {
     } else if (service === 'pharmacy') {
       const pharmacy = merchants.find(m => m.serviceType === 'pharmacy') || merchants[9];
       setSelectedMerchantForDetail(pharmacy);
-    } else if (service === 'delivery') {
+    } else if (service === 'delivery' || service === 'jastip') {
       setShowPackageDelivery(true);
-    } else if (service === 'bills') {
-      setBillsPpobInitialTab('bills');
-      setShowBillsPpob(true);
-    } else if (service === 'pulsa') {
-      setBillsPpobInitialTab('pulsa');
-      setShowBillsPpob(true);
-    } else if (service === 'ppob') {
-      setBillsPpobInitialTab('bills');
-      setShowBillsPpob(true);
-    } else if (service === 'event') {
-      setEventJastipInitialType('event');
-      setShowEventJastip(true);
-    } else if (service === 'jastip') {
-      setEventJastipInitialType('jastip');
-      setShowEventJastip(true);
+    } else if (service === 'donation') {
+      setShowDonationModal(true);
+    } else if (service === 'emergency') {
+      setShowEmergencyModal(true);
     } else if (service === 'umkm') {
       const umkmStore = merchants.find(m => m.serviceType === 'umkm') || merchants[10];
       setSelectedMerchantForDetail(umkmStore);
@@ -305,7 +355,10 @@ export default function App() {
 
   // MAIN RESPONSIVE WEB & MOBILE APPLICATION LAYOUT (NO ARTIFICIAL PHONE FRAME)
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col text-slate-900 font-sans antialiased selection:bg-emerald-500 selection:text-white">
+    <div 
+      className="min-h-screen flex flex-col text-slate-900 font-sans antialiased selection:bg-blue-600 selection:text-white bg-slate-100 relative bg-fixed bg-cover bg-center"
+      style={{ backgroundImage: "linear-gradient(rgba(240, 249, 255, 0.90), rgba(240, 249, 255, 0.93)), url('/sky-bg.jpg')" }}
+    >
       
       {/* TOP UNIFIED RESPONSIVE APP HEADER */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
@@ -384,14 +437,18 @@ export default function App() {
                 Chat
               </button>
               <button
-                onClick={() => setShowWalletModal(true)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                  activeCustomerTab === 'wallet'
-                    ? 'bg-white text-blue-800 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
+                onClick={() => setShowDonationModal(true)}
+                className="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer text-slate-600 hover:text-slate-900 flex items-center gap-1"
               >
-                AWD Pay
+                <Heart className="w-3.5 h-3.5 text-indigo-600" />
+                <span>Donasi</span>
+              </button>
+              <button
+                onClick={() => setShowEmergencyModal(true)}
+                className="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer text-rose-600 hover:bg-rose-50 flex items-center gap-1"
+              >
+                <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
+                <span>Tolong (SOS)</span>
               </button>
               <button
                 onClick={() => setActiveCustomerTab('profile')}
@@ -406,19 +463,20 @@ export default function App() {
             </nav>
           )}
 
-          {/* Right Action Tools: AWD Pay Badge, Role Selector & Admin Portal */}
+          {/* Right Action Tools: Credibility Badge, Role Selector & Admin Portal */}
           <div className="flex items-center gap-2">
             
-            {/* Quick AWD Pay Wallet balance badge */}
+            {/* Direct Credibility Points Badge (Customer / Mitra) */}
             <button
-              onClick={() => setShowWalletModal(true)}
-              className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl text-xs font-bold text-blue-900 transition-colors cursor-pointer"
+              onClick={() => setActiveCustomerTab('profile')}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl text-xs font-bold text-blue-900 transition-colors cursor-pointer shadow-2xs"
+              title="Poin Kredibilitas Transparansi Anda"
             >
-              <div className="w-5 h-5 rounded-md bg-blue-600 text-white flex items-center justify-center text-[10px] font-black">
-                A
-              </div>
-              <span className="hidden sm:inline text-slate-600 font-semibold text-[11px]">AWD Pay:</span>
-              <span className="text-blue-800 font-black">Rp {currentUser.walletBalance.toLocaleString('id-ID')}</span>
+              <ShieldCheck className="w-4 h-4 text-emerald-600" />
+              <span className="hidden sm:inline text-slate-600 font-semibold text-[11px]">Kredibilitas:</span>
+              <span className="font-mono font-black text-emerald-700">+{currentUser.credibilityScore?.plus ?? 148}</span>
+              <span className="text-slate-300">/</span>
+              <span className="font-mono font-black text-rose-600">-{currentUser.credibilityScore?.minus ?? 0}</span>
             </button>
 
             {/* Dedicated Admin Portal button (Top Header) */}
@@ -539,7 +597,6 @@ export default function App() {
                 onSelectMerchant={(m) => setSelectedMerchantForDetail(m)}
                 onOpenService={handleOpenService}
                 onOpenOrderTracking={(ord) => setTrackingOrder(ord)}
-                onOpenWallet={() => setShowWalletModal(true)}
               />
             )}
 
@@ -562,21 +619,9 @@ export default function App() {
               </div>
             )}
 
-            {activeCustomerTab === 'wallet' && (
-              <div className="py-1">
-                <WalletModal
-                  currentUser={currentUser}
-                  isOpen={true}
-                  onClose={() => setActiveCustomerTab('home')}
-                  onUpdateBalance={(bal, pts) => setCurrentUser(u => ({ ...u, walletBalance: bal, points: pts }))}
-                />
-              </div>
-            )}
-
             {activeCustomerTab === 'profile' && (
               <CustomerProfileView
                 currentUser={currentUser}
-                onOpenWallet={() => setShowWalletModal(true)}
                 onOpenAuth={handleOpenAuth}
                 onSwitchRole={handleSwitchRole}
               />
@@ -619,13 +664,11 @@ export default function App() {
               </button>
 
               <button
-                onClick={() => setShowWalletModal(true)}
-                className={`flex flex-col items-center gap-0.5 text-[10px] font-bold transition-colors cursor-pointer ${
-                  activeCustomerTab === 'wallet' ? 'text-blue-700' : 'text-slate-400 hover:text-slate-700'
-                }`}
+                onClick={() => setShowDonationModal(true)}
+                className="flex flex-col items-center gap-0.5 text-[10px] font-bold text-slate-400 hover:text-indigo-600 transition-colors cursor-pointer"
               >
-                <Wallet className="w-5 h-5" />
-                <span>AWD Pay</span>
+                <Heart className="w-5 h-5" />
+                <span>Donasi</span>
               </button>
 
               <button
@@ -655,9 +698,6 @@ export default function App() {
               onToggleStock={handleToggleProductStock}
               onUpdateOrderStatus={handleAdvanceOrderStatus}
               onBackToCustomer={() => handleSwitchRole('customer')}
-              onWithdraw={(amt) => {
-                setCurrentUser(u => ({ ...u, walletBalance: Math.max(0, u.walletBalance - amt) }));
-              }}
               onUpgradeMembership={(mId) => {
                 setMerchants(prev => prev.map(m => m.id === mId ? { ...m, isPremiumMember: true } : m));
               }}
@@ -694,6 +734,9 @@ export default function App() {
               couriers={INITIAL_COURIERS}
               orders={orders}
               banners={banners}
+              donations={donations}
+              onApproveDonation={handleApproveDonation}
+              onRejectDonation={handleRejectDonation}
               onExitAdmin={() => handleSwitchRole('customer')}
               onReviewFraud={(alertId, action) => {
                 setFraudAlerts(prev => prev.map(f => f.id === alertId ? { ...f, status: action } : f));
@@ -734,7 +777,15 @@ export default function App() {
         />
       )}
 
-      {/* Package Delivery Modal ("Kirim Barang") */}
+      {/* Ojek Passenger Ride Modal ("Antar Jemput") */}
+      <OjekRideModal
+        currentUser={currentUser}
+        isOpen={showOjekModal}
+        onClose={() => setShowOjekModal(false)}
+        onSubmitOrder={handlePlaceOrder}
+      />
+
+      {/* Package Delivery Modal ("Paket Cepat") */}
       <PackageDeliveryModal
         currentUser={currentUser}
         isOpen={showPackageDelivery}
@@ -742,22 +793,23 @@ export default function App() {
         onSubmitDelivery={handlePlaceOrder}
       />
 
-      {/* Bills & Pulsa PPOB Modal */}
-      <BillsAndPpobModal
+      {/* Donation Modal ("Donasi Warga / AWD Peduli") */}
+      <DonationModal
+        isOpen={showDonationModal}
         currentUser={currentUser}
-        initialTab={billsPpobInitialTab}
-        isOpen={showBillsPpob}
-        onClose={() => setShowBillsPpob(false)}
-        onSuccessTransaction={handlePlaceOrder}
+        campaigns={donations}
+        onClose={() => setShowDonationModal(false)}
+        onDonate={handleDonate}
+        onSubmitNewCampaign={handleSubmitNewCampaign}
       />
 
-      {/* Event Tickets & Jastip Modal */}
-      <EventAndJastipModal
+      {/* Emergency SOS Modal ("Tolong - Bantuan Segera") */}
+      <EmergencyHelpModal
+        isOpen={showEmergencyModal}
         currentUser={currentUser}
-        initialType={eventJastipInitialType}
-        isOpen={showEventJastip}
-        onClose={() => setShowEventJastip(false)}
-        onBookSuccess={handlePlaceOrder}
+        emergencies={emergencies}
+        onClose={() => setShowEmergencyModal(false)}
+        onSubmitEmergency={handleSubmitEmergency}
       />
 
       {/* Cart & Checkout Modal */}
@@ -792,14 +844,6 @@ export default function App() {
           onClose={() => setActiveChatOrderId(null)}
         />
       )}
-
-      {/* MitraPay Wallet Modal */}
-      <WalletModal
-        currentUser={currentUser}
-        isOpen={showWalletModal}
-        onClose={() => setShowWalletModal(false)}
-        onUpdateBalance={(bal, pts) => setCurrentUser(u => ({ ...u, walletBalance: bal, points: pts }))}
-      />
 
     </div>
   );
