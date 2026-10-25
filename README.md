@@ -34,10 +34,3 @@
 * **Fitur Cetak:** ESC/POS-ready thermal receipt layout.
 
 ---
-
-## 📦 Cara Menjalankan Proyek (Development)
-
-1. **Clone Repositori:**
-   ```bash
-   git clone [https://github.com/username/mitraarja.git](https://github.com/username/mitraarja.git)
-   cd mitraarja
